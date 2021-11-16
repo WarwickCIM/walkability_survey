@@ -2,23 +2,21 @@
 
 library(magick)
 
-
 total_images <- 5375
 
 for (i in 1:total_images) {
   img_n <- image_read(paste0("img/", i, "_1.jpg"))
   img_e <- image_read(paste0("img/", i, "_2.jpg"))
-  img_s <- image_read(paste0("img/", i, "_3.jpg"))
-  img_w <- image_read(paste0("img/", i, "_4.jpg"))
+  img_s <- image_read(paste0("img/", i, "_4.jpg"))
+  img_w <- image_read(paste0("img/", i, "_3.jpg"))
 
-  img_composite <- image_blank(1940, 1940, color = 'white') %>%
+  img_composite <- image_blank(1940, 1940, color = "white") %>%
     image_composite(img_n, gravity = "north")  %>%
-    image_composite(img_e,  gravity = 'east')  %>%
-    image_composite(img_s, gravity = 'south')  %>%
-    image_composite(img_w, gravity = 'west')
+    image_composite(img_e,  gravity = "east")  %>%
+    image_composite(img_s, gravity = "south")  %>%
+    image_composite(img_w, gravity = "west")
 
   image_write(img_composite, path = paste0("img/", i, "_composite.jpg"),
               format = "jpg")
 
 }
-
