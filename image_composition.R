@@ -14,7 +14,9 @@ for (i in 1:total_images) {
     image_composite(img_n, gravity = "north")  %>%
     image_composite(img_e,  gravity = "east")  %>%
     image_composite(img_s, gravity = "south")  %>%
-    image_composite(img_w, gravity = "west")
+    image_composite(img_w, gravity = "west") %>%
+    # Scale image proportionally to width: 900px
+    image_scale("900")
 
   image_write(img_composite, path = paste0("img/", i, "_composite.jpg"),
               format = "jpg")
