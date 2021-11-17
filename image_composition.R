@@ -10,7 +10,7 @@ for (i in 1:total_images) {
   img_s <- image_read(paste0("img/", i, "_4.jpg"))
   img_w <- image_read(paste0("img/", i, "_3.jpg"))
 
-  img_composite <- image_blank(1940, 1940, color = "white") %>%
+  img_composite <- image_blank(1940, 1300, color = "white") %>%
     image_composite(img_n, gravity = "north")  %>%
     image_composite(img_e,  gravity = "east")  %>%
     image_composite(img_s, gravity = "south")  %>%
