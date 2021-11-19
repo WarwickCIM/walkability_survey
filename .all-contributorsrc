@@ -1,0 +1,25 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "tessjazz",
+      "name": "tessjazz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/9252672?v=4",
+      "profile": "https://github.com/tessjazz",
+      "contributions": [
+        "ideas",
+        "userTesting"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "walkability_survey",
+  "projectOwner": "WarwickCIM",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
