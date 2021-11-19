@@ -24,6 +24,17 @@
         "ideas",
         "userTesting"
       ]
+    },
+    {
+      "login": "ccamara",
+      "name": "Carlos Cámara",
+      "avatar_url": "https://avatars.githubusercontent.com/u/706549?v=4",
+      "profile": "http://carloscamara.es",
+      "contributions": [
+        "code",
+        "ideas",
+        "userTesting"
+      ]
     }
   ],
   "contributorsPerLine": 7,
