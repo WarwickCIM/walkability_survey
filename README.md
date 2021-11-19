@@ -1,4 +1,7 @@
 This repo is part of the _Walkability Perception and its Relations to Scenery Elements and Socio-Demographics  – A Study based on Street View Imagery and Automatic Image Interpretation_ research project.
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Project contains  all the code and data aimed to analyse a survey on perceived walkability.
 
@@ -53,3 +56,23 @@ If facing issues installing packages from Windows, run this command. (more info 
 ```
 Sys.setenv(RENV_DOWNLOAD_METHOD = "libcurl")
 ```
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/tessjazz"><img src="https://avatars.githubusercontent.com/u/9252672?v=4?s=100" width="100px;" alt=""/><br /><sub><b>tessjazz</b></sub></a><br /><a href="#ideas-tessjazz" title="Ideas, Planning, & Feedback">🤔</a> <a href="#userTesting-tessjazz" title="User Testing">📓</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
