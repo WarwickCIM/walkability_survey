@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.1.0",
+    "Version": "4.1.2",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -9,6 +9,34 @@
     ]
   },
   "Packages": {
+    "Rcpp": {
+      "Package": "Rcpp",
+      "Version": "1.0.7",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "dab19adae4440ae55aa8a9d238b246bb"
+    },
+    "curl": {
+      "Package": "curl",
+      "Version": "4.3.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "022c42d49c28e95d69ca60446dbabf88"
+    },
+    "magick": {
+      "Package": "magick",
+      "Version": "2.7.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "56fbad418aa50939ed8c3028126af8d7"
+    },
+    "magrittr": {
+      "Package": "magrittr",
+      "Version": "2.0.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "41287f1ac7d28a92f0a286ed507928d3"
+    },
     "renv": {
       "Package": "renv",
       "Version": "0.13.2",
