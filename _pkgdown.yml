@@ -1,0 +1,21 @@
+home:
+  title: Perceived Walkability analyser
+  description: >
+    Description here
+
+template:
+  params:
+    bootswatch: flatly
+
+authors:
+  Carlos Cámara:
+    href: "https://carloscamara.es/en"
+  Tessio Novack:
+    href: "https://warwick.ac.uk/fac/cross_fac/cim/people/tessio-novack/"
+  James Tripp:
+    href: "https://warwick.ac.uk/fac/arts/research/digitalhumanities/team/"
+  Centre for Interdisciplinary Methodologies, University of Warwick:
+    href: "https://warwick.ac.uk/fac/cross_fac/cim/"
+    html: "<img src='https://avatars.githubusercontent.com/u/45662315' height='65'>"
+
+

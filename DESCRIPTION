@@ -1,0 +1,28 @@
+Package: walkabilitysurvey
+Type: Package
+Title: Perceived Walkability Survey analysis and visualisation.
+Version: 0.1.0
+Authors@R: c(
+    person("Carlos", "Cámara", "", "carlos@carloscamara.es", 
+      role = c("aut", "cre"),comment = c(ORCID = "0000-0002-9378-0549")),
+    person("Tessio", "Novack", "", "tessio.novack@warwick.ac.uk", 
+      role = c("aut", "ctb"),comment = c(ORCID = "0000-0003-2817-5972")),  
+    person("James", "Tripp", "", "James.Tripp@warwick.ac.uk", 
+      role = c("aut", "ctb"),comment = c(ORCID = "0000-0003-2471-3411")),  
+    person("Lichuan", "Xiang", "", "l.xiang.2@warwick.ac.uk", 
+      role = c("ctb")),  
+    person("Centre for Interdisciplinary Methodologies, University of Warwick", 
+      role = c("org", "aut")),
+    person("Research Development Fund 2021/22", role = "fnd")
+      )
+Description: Anaylises and visualises data from a survey on perceived walkability.
+License: MIT
+BugReports: https://github.com/WarwickCIM/walkability_survey/issues
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.2
+Depends:
+  here,
+  janitor,
+  renv,
+  tidyverse

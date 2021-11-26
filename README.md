@@ -39,14 +39,9 @@ be collected at any point, and we will not have any way to trace your answers to
 ├── analyses      -> rmd files containing reports, papers...
 ├── data          -> data files
 │   └── data-raw  -> original, raw data
-├── img           -> images to be used in the reports and papers
-│   └── cases     -> figures from our case study
 ├── man           -> documentation autogerated from comments
 ├── R             -> functions used in the project
 └── renv          -> r environment, for reproducible code (ignored from repo)
-    ├── library
-    │   └── R-4.0
-    └── staging
 ```
 
 ## Troubleshooting
