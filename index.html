@@ -20,6 +20,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -32,25 +34,19 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">walkabilitysurvey</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="reference/index.html">Reference</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/WarwickCIM/walkability_survey/">
+  <a href="https://github.com/WarwickCIM/walkability_survey/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -70,43 +66,43 @@
 
 <p>This repo is part of the <em>Walkability Perception and its Relations to Scenery Elements and Socio-Demographics – A Study based on Street View Imagery and Automatic Image Interpretation</em> research project. <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section --> <a href="#contributors-"><img src="https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square" alt="All Contributors"></a> <!-- ALL-CONTRIBUTORS-BADGE:END --></p>
 <p>Project contains all the code and data aimed to analyse a survey on perceived walkability.</p>
-<div id="who-are-we" class="section level2">
-<h2 class="hasAnchor">
-<a href="#who-are-we" class="anchor"></a>Who are we?</h2>
-<p>Dr Tessio Novack, Dr James Tripp and Dr Carlos Camara Menoyo. We are researchers from the <a href="https://warwick.ac.uk">University of Warwick</a>.</p>
+<div class="section level2">
+<h2 id="who-are-we">Who are we?<a class="anchor" aria-label="anchor" href="#who-are-we"></a>
+</h2>
+<p>Dr Tessio Novack, Dr James Tripp and Dr Carlos Camara Menoyo. We are researchers from the <a href="https://warwick.ac.uk" class="external-link">University of Warwick</a>.</p>
 </div>
-<div id="what-are-our-interests" class="section level2">
-<h2 class="hasAnchor">
-<a href="#what-are-our-interests" class="anchor"></a>What are our interests?</h2>
+<div class="section level2">
+<h2 id="what-are-our-interests">What are our interests?<a class="anchor" aria-label="anchor" href="#what-are-our-interests"></a>
+</h2>
 <p>This study examines ‘walkability’. Specifically, what makes an area seem more or less walkable?</p>
 </div>
-<div id="what-is-in-this-questionnaire" class="section level2">
-<h2 class="hasAnchor">
-<a href="#what-is-in-this-questionnaire" class="anchor"></a>What is in this questionnaire?</h2>
+<div class="section level2">
+<h2 id="what-is-in-this-questionnaire">What is in this questionnaire?<a class="anchor" aria-label="anchor" href="#what-is-in-this-questionnaire"></a>
+</h2>
 <p>We ask about demographic information, a short personality inventory, for ratings of images, information on your past experience and influences on your ratings. No personal data from you will be collected at any point, and we will not have any way to trace your answers to you</p>
 </div>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<ol>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<ol style="list-style-type: decimal">
 <li>Clone this repo: <code>git clone git@github.com:WarwickCIM/walkability_survey.git</code>
 </li>
-<li>Install <code>renv</code> if not already installed (instructions <a href="https://rstudio.github.io/renv/index.html">here</a>).</li>
-<li>Run <code><a href="https://rstudio.github.io/renv/reference/restore.html">renv::restore()</a></code> to restore the state of your project from <code>renv.lock</code>.</li>
+<li>Install <code>renv</code> if not already installed (instructions <a href="https://rstudio.github.io/renv/index.html" class="external-link">here</a>).</li>
+<li>Run <code><a href="https://rstudio.github.io/renv/reference/restore.html" class="external-link">renv::restore()</a></code> to restore the state of your project from <code>renv.lock</code>.</li>
 </ol>
 </div>
-<div id="updating-packages" class="section level2">
-<h2 class="hasAnchor">
-<a href="#updating-packages" class="anchor"></a>Updating packages</h2>
-<ol>
+<div class="section level2">
+<h2 id="updating-packages">Updating packages<a class="anchor" aria-label="anchor" href="#updating-packages"></a>
+</h2>
+<ol style="list-style-type: decimal">
 <li>Install packages as usual.</li>
-<li>Run <code><a href="https://rstudio.github.io/renv/reference/snapshot.html">renv::snapshot()</a></code> to update <code>renv.lock</code>.</li>
+<li>Run <code><a href="https://rstudio.github.io/renv/reference/snapshot.html" class="external-link">renv::snapshot()</a></code> to update <code>renv.lock</code>.</li>
 <li>Create a commit with <code>renv.lock</code> changes and push it to the repo.</li>
 </ol>
 </div>
-<div id="folder-structure" class="section level2">
-<h2 class="hasAnchor">
-<a href="#folder-structure" class="anchor"></a>Folder structure</h2>
+<div class="section level2">
+<h2 id="folder-structure">Folder structure<a class="anchor" aria-label="anchor" href="#folder-structure"></a>
+</h2>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="ex">.</span></span>
 <span id="cb1-2"><a href="#cb1-2"></a>├── <span class="ex">analyses</span>      -<span class="op">&gt;</span> rmd files containing reports, papers...</span>
 <span id="cb1-3"><a href="#cb1-3"></a>├── <span class="ex">data</span>          -<span class="op">&gt;</span> data files</span>
@@ -115,77 +111,90 @@
 <span id="cb1-6"><a href="#cb1-6"></a>├── <span class="ex">R</span>             -<span class="op">&gt;</span> functions used in the project</span>
 <span id="cb1-7"><a href="#cb1-7"></a>└── <span class="ex">renv</span>          -<span class="op">&gt;</span> r environment, for reproducible code (ignored from repo)</span></code></pre></div>
 </div>
-<div id="troubleshooting" class="section level2">
-<h2 class="hasAnchor">
-<a href="#troubleshooting" class="anchor"></a>Troubleshooting</h2>
-<p>If facing issues installing packages from Windows, run this command. (more info <a href="https://rstudio.github.io/renv/articles/renv.html#downloads-1">in <code>renv</code> documentation</a> and <a href="https://community.rstudio.com/t/cant-install-packages-with-renv/96696/6">in this discussion</a>)</p>
-<pre><code>Sys.setenv(RENV_DOWNLOAD_METHOD = "libcurl")</code></pre>
+<div class="section level2">
+<h2 id="troubleshooting">Troubleshooting<a class="anchor" aria-label="anchor" href="#troubleshooting"></a>
+</h2>
+<p>If facing issues installing packages from Windows, run this command. (more info <a href="https://rstudio.github.io/renv/articles/renv.html#downloads-1" class="external-link">in <code>renv</code> documentation</a> and <a href="https://community.rstudio.com/t/cant-install-packages-with-renv/96696/6" class="external-link">in this discussion</a>)</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>RENV_DOWNLOAD_METHOD <span class="op">=</span> <span class="st">"libcurl"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="contributors-" class="section level2">
-<h2 class="hasAnchor">
-<a href="#contributors-" class="anchor"></a>Contributors ✨</h2>
-<p>Thanks goes to these wonderful people (<a href="https://allcontributors.org/docs/en/emoji-key">emoji key</a>):</p>
+<div class="section level2">
+<h2 id="contributors-">Contributors ✨<a class="anchor" aria-label="anchor" href="#contributors-"></a>
+</h2>
+<p>Thanks goes to these wonderful people (<a href="https://allcontributors.org/docs/en/emoji-key" class="external-link">emoji key</a>):</p>
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 <table class="table"><tr>
 <td align="center">
-<a href="https://github.com/tessjazz"><img src="https://avatars.githubusercontent.com/u/9252672?v=4?s=100" width="100px;" alt=""><br><sub><b>tessjazz</b></sub></a><br><a href="#ideas-tessjazz" title="Ideas, Planning, &amp; Feedback">🤔</a> <a href="#userTesting-tessjazz" title="User Testing">📓</a>
+<a href="https://github.com/tessjazz" class="external-link"><img src="https://avatars.githubusercontent.com/u/9252672?v=4?s=100" width="100px;" alt=""><br><sub><b>tessjazz</b></sub></a><br><a href="#ideas-tessjazz" title="Ideas, Planning, &amp; Feedback">🤔</a> <a href="#userTesting-tessjazz" title="User Testing">📓</a>
 </td>
 <td align="center">
-<a href="https://warwick.ac.uk/fac/arts/research/digitalhumanities/team/"><img src="https://avatars.githubusercontent.com/u/5781056?v=4?s=100" width="100px;" alt=""><br><sub><b>James Tripp</b></sub></a><br><a href="#ideas-jamestripp" title="Ideas, Planning, &amp; Feedback">🤔</a> <a href="#userTesting-jamestripp" title="User Testing">📓</a>
+<a href="https://warwick.ac.uk/fac/arts/research/digitalhumanities/team/" class="external-link"><img src="https://avatars.githubusercontent.com/u/5781056?v=4?s=100" width="100px;" alt=""><br><sub><b>James Tripp</b></sub></a><br><a href="#ideas-jamestripp" title="Ideas, Planning, &amp; Feedback">🤔</a> <a href="#userTesting-jamestripp" title="User Testing">📓</a>
 </td>
 <td align="center">
-<a href="http://carloscamara.es"><img src="https://avatars.githubusercontent.com/u/706549?v=4?s=100" width="100px;" alt=""><br><sub><b>Carlos Cámara</b></sub></a><br><a href="https://github.com/WarwickCIM/walkability_survey/commits?author=ccamara" title="Code">💻</a> <a href="#ideas-ccamara" title="Ideas, Planning, &amp; Feedback">🤔</a> <a href="#userTesting-ccamara" title="User Testing">📓</a>
+<a href="http://carloscamara.es" class="external-link"><img src="https://avatars.githubusercontent.com/u/706549?v=4?s=100" width="100px;" alt=""><br><sub><b>Carlos Cámara</b></sub></a><br><a href="https://github.com/WarwickCIM/walkability_survey/commits?author=ccamara" title="Code" class="external-link">💻</a> <a href="#ideas-ccamara" title="Ideas, Planning, &amp; Feedback">🤔</a> <a href="#userTesting-ccamara" title="User Testing">📓</a>
 </td>
 </tr></table>
-<!-- markdownlint-restore --><!-- prettier-ignore-end --><!-- ALL-CONTRIBUTORS-LIST:END --><p>This project follows the <a href="https://github.com/all-contributors/all-contributors">all-contributors</a> specification. Contributions of any kind welcome!</p>
+<!-- markdownlint-restore --><!-- prettier-ignore-end --><!-- ALL-CONTRIBUTORS-LIST:END --><p>This project follows the <a href="https://github.com/all-contributors/all-contributors" class="external-link">all-contributors</a> specification. Contributions of any kind welcome!</p>
 </div>
 
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/WarwickCIM/walkability_survey/">https://​github.com/​WarwickCIM/​walkability_survey/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/WarwickCIM/walkability_survey/issues">https://​github.com/​WarwickCIM/​walkability_survey/​issues</a>
-</li>
+<li><a href="https://github.com/WarwickCIM/walkability_survey/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/WarwickCIM/walkability_survey/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://opensource.org/licenses/mit-license.php">MIT</a></li>
+<li><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a></li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing walkabilitysurvey</a></li>
+</ul>
+</div>
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>
-<a href="https://carloscamara.es/en">Carlos Cámara</a> <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-9378-0549" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<a href="https://carloscamara.es/en" class="external-link">Carlos Cámara</a> <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-9378-0549" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>
-<a href="https://warwick.ac.uk/fac/cross_fac/cim/people/tessio-novack/">Tessio Novack</a> <br><small class="roles"> Author, contributor </small> <a href="https://orcid.org/0000-0003-2817-5972" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<a href="https://warwick.ac.uk/fac/cross_fac/cim/people/tessio-novack/" class="external-link">Tessio Novack</a> <br><small class="roles"> Author, contributor </small> <a href="https://orcid.org/0000-0003-2817-5972" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>
-<a href="https://warwick.ac.uk/fac/arts/research/digitalhumanities/team/">James Tripp</a> <br><small class="roles"> Author, contributor </small> <a href="https://orcid.org/0000-0003-2471-3411" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<a href="https://warwick.ac.uk/fac/arts/research/digitalhumanities/team/" class="external-link">James Tripp</a> <br><small class="roles"> Author, contributor </small> <a href="https://orcid.org/0000-0003-2471-3411" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>
-<a href="https://warwick.ac.uk/fac/cross_fac/cim/"><img src="https://avatars.githubusercontent.com/u/45662315" height="65"></a> <br><small class="roles"> Originator, author </small>  </li>
+<a href="https://warwick.ac.uk/fac/cross_fac/cim/" class="external-link"><img src="https://avatars.githubusercontent.com/u/45662315" height="65"></a> <br><small class="roles"> Originator, author </small>  </li>
 <li>Research Development Fund 2021/22 <br><small class="roles"> Funder </small>  </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
+
+
 
   </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="https://carloscamara.es/en">Carlos Cámara</a>, <a href="https://warwick.ac.uk/fac/cross_fac/cim/people/tessio-novack/">Tessio Novack</a>, <a href="https://warwick.ac.uk/fac/arts/research/digitalhumanities/team/">James Tripp</a>, <a href="https://warwick.ac.uk/fac/cross_fac/cim/"><img src="https://avatars.githubusercontent.com/u/45662315" height="65"></a>, Research Development Fund 2021/22.</p>
+  <p></p>
+<p>Developed by <a href="https://carloscamara.es/en" class="external-link">Carlos Cámara</a>, <a href="https://warwick.ac.uk/fac/cross_fac/cim/people/tessio-novack/" class="external-link">Tessio Novack</a>, <a href="https://warwick.ac.uk/fac/arts/research/digitalhumanities/team/" class="external-link">James Tripp</a>, <a href="https://warwick.ac.uk/fac/cross_fac/cim/" class="external-link"><img src="https://avatars.githubusercontent.com/u/45662315" height="65"></a>, Research Development Fund 2021/22.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -193,6 +202,8 @@
 
   
 
+
+  
 
   </body>
 </html>
