@@ -23,6 +23,7 @@ LazyData: true
 RoxygenNote: 7.1.2
 Depends:
   here,
+  flexdashboard,
   janitor,
   renv,
   tidyverse
