@@ -48,7 +48,7 @@ be collected at any point, and we will not have any way to trace your answers to
 
 If facing issues installing packages from Windows, run this command. (more info [in `renv` documentation](https://rstudio.github.io/renv/articles/renv.html#downloads-1) and [in this discussion](https://community.rstudio.com/t/cant-install-packages-with-renv/96696/6))
 
-```
+```R
 Sys.setenv(RENV_DOWNLOAD_METHOD = "libcurl")
 ```
 
