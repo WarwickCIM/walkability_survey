@@ -13,8 +13,13 @@ output:
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
-library(tidyverse)
+library(dplyr)
+library(forcats)
+library(ggplot2)
+library(readr)
 library(reactable)
+library(stringr)
+library(tidyr)
 library(plotly)
 
 

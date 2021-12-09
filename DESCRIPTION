@@ -26,4 +26,11 @@ Depends:
   flexdashboard,
   janitor,
   renv,
-  tidyverse
+  dplyr,
+  forcats,
+  ggplot2,
+  pkgdown,
+  readr,
+  reactable,
+  stringr,
+  tidyr
