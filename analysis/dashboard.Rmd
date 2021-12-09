@@ -151,12 +151,67 @@ ratings_df %>%
   arrange(image_num) %>% 
   reactable(
     searchable = TRUE, 
+    striped = TRUE,
+    highlight = TRUE,
+    bordered = TRUE,
     # pagination = FALSE, 
     # defaultSorted = list("Strongly Agree" = "desc"),
     defaultColDef = colDef(sortNALast = TRUE), 
     columns = list(
-    img = colDef(html = TRUE)
-  ))
+      image_num = colDef(name = "#", width=20),
+      img = colDef(html = TRUE),
+      `aesthetics_Strongly disagree` = colDef(name = "Strongly Disagree"),
+      `aesthetics_Disagree` = colDef(name = "Disagree"),
+      `aesthetics_Neither Agree or Disagree` = 
+        colDef(name = "Neither Agree or Disagree"),
+      `aesthetics_Agree` =  colDef(name = "Agree"),
+      `aesthetics_Strongly Agree` =  colDef(name = "Strongly Agree"),
+      `enjoyment_Strongly disagree` = colDef(name = "Strongly Disagree"),
+      `enjoyment_Disagree` = colDef(name = "Disagree"),
+      `enjoyment_Neither Agree or Disagree` = 
+        colDef(name = "Neither Agree or Disagree"),
+      `enjoyment_Agree` =  colDef(name = "Agree"),
+      `enjoyment_Strongly Agree` =  colDef(name = "Strongly Agree"),
+      `safety_Strongly disagree` = colDef(name = "Strongly Disagree"),
+      `safety_Disagree` = colDef(name = "Disagree"),
+      `safety_Neither Agree or Disagree` = 
+        colDef(name = "Neither Agree or Disagree"),
+      `safety_Agree` =  colDef(name = "Agree"),
+      `safety_Strongly Agree` =  colDef(name = "Strongly Agree"),
+      `vibrancy_Strongly disagree` = colDef(name = "Strongly Disagree"),
+      `vibrancy_Disagree` = colDef(name = "Disagree"),
+      `vibrancy_Neither Agree or Disagree` = 
+        colDef(name = "Neither Agree or Disagree"),
+      `vibrancy_Agree` =  colDef(name = "Agree"),
+      `vibrancy_Strongly Agree` =  colDef(name = "Strongly Agree")
+      ),
+    columnGroups = list(
+      colGroup(name = "Aesthetics", 
+               columns = c("aesthetics_Strongly disagree", 
+                           "aesthetics_Disagree",
+                           "aesthetics_Neither Agree or Disagree",
+                           "aesthetics_Agree",
+                           "aesthetics_Strongly Agree")),
+      colGroup(name = "Enjoyment", 
+               columns = c("enjoyment_Strongly disagree", 
+                           "enjoyment_Disagree",
+                           "enjoyment_Neither Agree or Disagree",
+                           "enjoyment_Agree",
+                           "enjoyment_Strongly Agree")),
+      colGroup(name = "Safety", 
+               columns = c("safety_Strongly disagree", 
+                           "safety_Disagree",
+                           "safety_Neither Agree or Disagree",
+                           "safety_Agree",
+                           "safety_Strongly Agree")),
+      colGroup(name = "Vibrancy", 
+               columns = c("vibrancy_Strongly disagree", 
+                           "vibrancy_Disagree",
+                           "vibrancy_Neither Agree or Disagree",
+                           "vibrancy_Agree",
+                           "vibrancy_Strongly Agree"))
+      )
+    )
 ```
 
 ### Aesthetics

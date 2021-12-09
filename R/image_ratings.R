@@ -92,6 +92,9 @@ get_ratings_table <- function(df, rating_category, img_width = 160){
     reactable(
       searchable = TRUE,
       # pagination = FALSE,
+      striped = TRUE,
+      highlight = TRUE,
+      bordered = TRUE,
       defaultSorted = list("Strongly Agree" = "desc"),
       defaultColDef = colDef(sortNALast = TRUE),
       columns = list(
