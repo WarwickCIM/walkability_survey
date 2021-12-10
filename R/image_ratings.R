@@ -51,7 +51,8 @@ get_image_ratings <- function(df) {
         str_detect(item, "vibrancy_") ~ "vibrancy",
         str_detect(item, "safety_") ~ "safety")) %>%
       mutate(across(everything(), as.character)) %>%
-      mutate(image_num = as.integer(image_num))
+      mutate(image_num = as.integer(image_num)) %>%
+      filter(!is.na(answer))
 
 
     ratings_df <- ratings_df %>%
@@ -82,7 +83,7 @@ get_ratings_table <- function(df, rating_category, img_width = 160){
   df %>%
     count(image_num, item, rating) %>%
     mutate(img = paste0("<a href='https://raw.githubusercontent.com/WarwickCIM/walkability_survey/gsv_images/img/",image_num, "_composite.jpg'>",
-                        "<img src='https://raw.githubusercontent.com/WarwickCIM/walkability_survey/gsv_images/img/", image_num, "_composite.jpg' width='", img_width, "px'> </a>")) %>%
+                        "<img src='https://raw.githubusercontent.com/WarwickCIM/walkability_survey/gsv_images/img/s/", image_num, "_composite.jpg' width='", img_width, "px'> </a>")) %>%
     relocate(img, .after = image_num) %>%
     filter(item == rating_category) %>%
     select(-item) %>%
