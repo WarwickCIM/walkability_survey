@@ -39,8 +39,8 @@ get_image_ratings <- function(df) {
   for (i in 1:15) {
     ratings_df_tmp <- df %>%
       select(response_id, paste0("image_", i), starts_with(c(
-       paste0("enjoyment_img", i, "_"), paste0("aesthetics_img", i, "_"),
-        paste0("safety_img", i, "_"), paste0("vibrancy_img", i, "_")))) %>%
+       paste0("enjoyment_img", i), paste0("aesthetics_img", i),
+        paste0("safety_img", i), paste0("vibrancy_img", i)))) %>%
       rename(image_num = paste0("image_", i)) %>%
       pivot_longer( starts_with(
         c("enjoyment_", "aesthetics_", "safety_", "vibrancy_")),
