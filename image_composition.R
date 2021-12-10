@@ -22,3 +22,15 @@ for (i in 1:total_images) {
               format = "jpg")
 
 }
+
+
+# Create smaller copies ---------------------------------------------------
+
+for (i in 1:total_images) {
+  big_img <- image_read(paste0("img/", i, "_composite.jpg"))
+
+  small_img <- image_scale(big_img, "200")
+
+  image_write(small_img, path = paste0("img/s/", i, "_composite.jpg"),
+              format = "jpg")
+}
