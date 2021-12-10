@@ -15,7 +15,7 @@
 #' @return Clean and tidy dataset with anonymised responses, ready to analise.
 data_preparations <- function(file) {
   df <- readr::read_csv(here::here(file), skip = 1, na = c("", " "),
-                        col_type = list(.default = col_factor())) %>%
+                        col_type = list(.default = col_character())) %>%
     # Qualtrics adds comments to row one. They need to be removed.
     dplyr::filter(row_number() != 1) %>%
     # Cleaning up messy names.
@@ -31,7 +31,10 @@ data_preparations <- function(file) {
     # Change types.
     mutate(start_date = lubridate::ymd_hms(start_date),
            end_date = lubridate::ymd_hms(end_date),
-           recorded_date = lubridate::ymd_hms(recorded_date))
+           recorded_date = lubridate::ymd_hms(recorded_date)) %>%
+    # Change factor order.
+    mutate(gender = fct_relevel(as.factor(gender),
+                                levels = c("Female", "Male", "Non-binary", "Prefer to self-describe")))
 
   # Rename long variables.
   # TODO: make this work!
