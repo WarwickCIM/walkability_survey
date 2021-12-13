@@ -52,7 +52,7 @@ get_image_ratings <- function(df) {
         str_detect(item, "safety_") ~ "safety")) %>%
       mutate(across(everything(), as.character)) %>%
       mutate(image_num = as.integer(image_num)) %>%
-      filter(!is.na(answer))
+      filter(!is.na(rating))
 
 
     ratings_df <- ratings_df %>%
@@ -62,7 +62,7 @@ get_image_ratings <- function(df) {
 
   ratings_df <- ratings_df %>%
     mutate(rating = fct_relevel(
-      rating, c("Strongly disagree", "Disagree", "Neither Agree or Disagree",
+      rating, c("Strongly Disagree", "Disagree", "Neutral",
                 "Agree", "Strongly Agree")))
 
   return(ratings_df)
