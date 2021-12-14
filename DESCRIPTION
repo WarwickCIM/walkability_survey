@@ -29,6 +29,7 @@ Depends:
   dplyr,
   forcats,
   ggplot2,
+  magick,
   pkgdown,
   readr,
   reactable,
