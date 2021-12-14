@@ -1,6 +1,6 @@
 This repo is part of the _Walkability Perception and its Relations to Scenery Elements and Socio-Demographics  – A Study based on Street View Imagery and Automatic Image Interpretation_ research project.
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Project contains  all the code and data aimed to analyse a survey on perceived walkability.
@@ -64,6 +64,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/tessjazz"><img src="https://avatars.githubusercontent.com/u/9252672?v=4?s=100" width="100px;" alt=""/><br /><sub><b>tessjazz</b></sub></a><br /><a href="#ideas-tessjazz" title="Ideas, Planning, & Feedback">🤔</a> <a href="#userTesting-tessjazz" title="User Testing">📓</a></td>
     <td align="center"><a href="https://warwick.ac.uk/fac/arts/research/digitalhumanities/team/"><img src="https://avatars.githubusercontent.com/u/5781056?v=4?s=100" width="100px;" alt=""/><br /><sub><b>James Tripp</b></sub></a><br /><a href="#ideas-jamestripp" title="Ideas, Planning, & Feedback">🤔</a> <a href="#userTesting-jamestripp" title="User Testing">📓</a></td>
     <td align="center"><a href="http://carloscamara.es"><img src="https://avatars.githubusercontent.com/u/706549?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Carlos Cámara</b></sub></a><br /><a href="https://github.com/WarwickCIM/walkability_survey/commits?author=ccamara" title="Code">💻</a> <a href="#ideas-ccamara" title="Ideas, Planning, & Feedback">🤔</a> <a href="#userTesting-ccamara" title="User Testing">📓</a></td>
+    <td align="center"><a href="https://github.com/Tiaspetto"><img src="https://avatars.githubusercontent.com/u/11329784?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Codex Xiang</b></sub></a><br /><a href="#ideas-tiaspetto" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
