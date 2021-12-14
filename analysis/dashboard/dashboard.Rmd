@@ -2,7 +2,7 @@
 title: "Walkability Perception"
 output: 
   flexdashboard::flex_dashboard:
-    logo: logo.png
+    # logo: logo.png
     css: style.css
     orientation: rows
     # orientation: columns
@@ -39,6 +39,13 @@ df <- data_preparations("data/raw/survey_platial_demo.csv") %>%
 
 ratings_df <- get_image_ratings(df) 
 
+ratings_total <- ratings_df %>% 
+  count(image_num)
+
+n_rated_max <- max(ratings_total$n)
+n_rated_min <- min(ratings_total$n)
+n_rated_mean <- round(mean(ratings_total$n),2)
+
 # Color definitions ------------------------------------------
 
 warwick_color <- "#5B3069"
@@ -55,7 +62,7 @@ secondary_disabled <- "#DFDFDF"
 ```
 
 
-# Demographics
+# Demographics {data-icon="fas fa-users"}
 
 ```{r include=FALSE}
 
@@ -164,7 +171,7 @@ subplot(fig_gender, fig_age, fig_inmigration, fig_ethnicity, nrows=2,
 ```
 
 
-### Demographics' distribution
+### Gender by age
 
 ```{r}
 demographics_df <- df %>% 
@@ -198,9 +205,9 @@ ggplotly(p) %>%
 ```
 
 
-### Demographics' distribution2
+<!-- ### Demographics' distribution2 -->
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 demographics_df <- df %>% 
   select(gender, age) %>% 
   count(gender, age) %>% 
@@ -230,38 +237,52 @@ ggplotly(p) %>%
 
 ```
 
-### Table
+<!-- ### Table -->
 
-```{r}
-
+```{r eval=FALSE, include=FALSE}
 reactable(demographics_df)
 ```
 
 
-# Ratings
+# Ratings {data-icon="fas fa-street-view"}
 
 ## Column
-
-### Participants {.value-box .no-mobile}
-
-```{r}
-
-valueBox(value = format(nrow(df), big.mark = ","), 
-         caption = "participants have fully completed this survey", 
-         icon = "fas fa-users", 
-         color = "#F8F8F8")
-```
 
 ### Images {.value-box .no-mobile}
 
 ```{r}
-
 valueBox(value = format(nlevels(as.factor(ratings_df$image_num)), big.mark = ","), 
          caption = "different images have been assessed, of a total of 5,375", 
          icon = "fas fa-images", 
          color = "#F8F8F8")
 ```
 
+### Max {.value-box .no-mobile}
+
+```{r}
+valueBox(value = n_rated_max, 
+         caption = "is the maximum number of ratings received by a single image", 
+         icon = "fas fa-star", 
+         color = "#F8F8F8")
+```
+
+### Min {.value-box .no-mobile}
+
+```{r}
+valueBox(value = n_rated_min, 
+         caption = "is the minimum number of ratings received by a single image", 
+         icon = "far fa-star", 
+         color = "#F8F8F8")
+```
+
+### Min {.value-box .no-mobile}
+
+```{r}
+valueBox(value = n_rated_mean, 
+         caption = "is the average number of ratings received by every single image", 
+         icon = "fas fa-star-half", 
+         color = "#F8F8F8")
+```
 
 ## Column {.tabset}
 
@@ -515,11 +536,12 @@ ratings_df %>%
     img = colDef(html = TRUE)
   ))
 ```
-# Perceptions
+
+# Objects {data-icon="fas fa-road"}
 
 ## Column
 
-### Items
+### Objects' influence on walkability
 
 ```{r}
 p <- df %>% 
@@ -535,13 +557,40 @@ p <- df %>%
   ggplot(aes(x = Influence, y = Object, fill = n)) +
   geom_tile() + 
   labs(title ="Objects' influence on walkability", 
-       x = "", y = "") +
+       x = "", y = "", fill = "") +
   # scale_fill_distiller(palette = "Purples") +
   scale_fill_gradient(low= warwick_color_disabled, high= warwick_color) + 
   theme_minimal()
 
 ggplotly(p)
 ```
+
+## Column {.tabset}
+
+### Other influencing objects (positive)
+
+```{r}
+df %>% 
+  select(influencing_positive_objects) %>% 
+  separate_rows(influencing_positive_objects, sep =", ") %>% 
+  count(influencing_positive_objects, sort = TRUE) %>% 
+  rename(Object = influencing_positive_objects) %>% 
+  arrange(desc(n), Object) %>% 
+  reactable(searchable = TRUE)
+```
+
+### Other influencing objects (negative)
+
+```{r}
+df %>% 
+  select(influencing_negative_objects) %>% 
+  separate_rows(influencing_negative_objects, sep =", ") %>% 
+  count(influencing_negative_objects, sort = TRUE) %>% 
+  rename(Object = influencing_negative_objects) %>% 
+  arrange(desc(n), Object) %>% 
+  reactable(searchable = TRUE)
+```
+
 
 
 # About {data-icon="ion-information-circled"}
