@@ -3,6 +3,7 @@ title: "Walkability Perception"
 output: 
   flexdashboard::flex_dashboard:
     logo: logo.png
+    css: style.css
     orientation: rows
     # orientation: columns
     # vertical_layout: 
