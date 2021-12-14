@@ -33,8 +33,10 @@ data_preparations <- function(file) {
            end_date = lubridate::ymd_hms(end_date),
            recorded_date = lubridate::ymd_hms(recorded_date)) %>%
     # Change factor order.
-    mutate(gender = fct_relevel(as.factor(gender),
-                                levels = c("Female", "Male", "Non-binary", "Prefer to self-describe")))
+    mutate(gender = str_replace(gender, "Prefer to self-describe", "Other"),
+           gender = fct_relevel(as.factor(gender),
+                                levels = c("Female", "Male", "Non-binary",
+                                           "Other")))
 
   # Rename long variables.
   # TODO: make this work!

@@ -66,7 +66,7 @@ participants <- df %>%
 participants_female <- participants$n[participants$gender == "Female"]
 participants_male <- participants$n[participants$gender == "Male"]
 participants_non_binary <- participants$n[participants$gender == "Non-binary"]
-participants_other <- participants$n[participants$gender == "Prefer to self-describe"]
+participants_other <- participants$n[participants$gender == "Other"]
 
 participants_female_ratio <- round(
   participants_female / total_participants * 100, 1)
@@ -92,7 +92,7 @@ valueBox(value = format(nrow(df), big.mark = ","),
 
 valueBox(value = participants_female, 
          caption = "female participants", 
-         icon = "fas fa-images", 
+         icon = "fas fa-venus", 
          color = "#F8F8F8")
 ```
 
@@ -102,6 +102,7 @@ valueBox(value = participants_female,
 
 valueBox(value = participants_male, 
          caption = "male participants",
+         icon = "fas fa-mars", 
          color = "#F8F8F8")
 ```
 
@@ -111,7 +112,7 @@ valueBox(value = participants_male,
 
 valueBox(value = participants_non_binary, 
          caption = "non-binary participants", 
-         icon = "fas fa-images", 
+         icon = "fas fa-neuter", 
          color = "#F8F8F8")
 ```
 
@@ -121,11 +122,46 @@ valueBox(value = participants_non_binary,
 
 valueBox(value = participants_other, 
          caption = "participants prefered to self-describe themselves", 
-         icon = "fas fa-images", 
+         icon = "fas fa-genderless", 
          color = "#F8F8F8")
 ```
 
 ## Column {.tabset}
+
+### Demographics' distribution
+
+```{r}
+fig_gender <- ggplot(df, aes(x = gender, y = ..count..)) + 
+  geom_bar(fill = "#DECBE4") + 
+  labs(title = "Gender distribution", y = "", x = "") +
+  theme_minimal()
+
+fig_age <- ggplot(df, aes(x = age, y = ..count..)) + 
+  geom_bar(fill = "#DECBE4") + 
+  labs(title = "Age distribution", y = "", x = "") +
+  theme_minimal()
+
+
+fig_ethnicity <- ggplot(df, aes(x = ethnicity, y = ..count..)) + 
+  geom_bar(fill = "#DECBE4") + 
+  labs(title = "Ethnicity distribution", y = "", x = "") +
+  theme_minimal()
+
+fig_inmigration <- ggplot(df, aes(x = inmigration_background, y = ..count..)) + 
+  geom_bar(fill = "#DECBE4") + 
+  labs(title = "Inmigration's status distribution", y = "", x = "") +
+  theme_minimal()
+
+fig_gender <- ggplotly(fig_gender)
+fig_age <- ggplotly(fig_age)
+fig_inmigration <- ggplotly(fig_inmigration)
+fig_ethnicity <- ggplotly(fig_ethnicity)
+
+subplot(fig_gender, fig_age, fig_inmigration, fig_ethnicity, nrows=2, 
+        shareY = TRUE)
+
+```
+
 
 ### Demographics' distribution
 
@@ -228,68 +264,6 @@ valueBox(value = format(nlevels(as.factor(ratings_df$image_num)), big.mark = ","
 
 ## Column {.tabset}
 
-### Average ratings by genre
-
-```{r}
-ratings_avg <- df %>% 
-  select(gender, starts_with(c("enjoyment_", "aesthetics_", "safety_", "vibrancy_"))) %>% 
-  pivot_longer(!gender, names_to = "question", values_to = "answer") %>% 
-  mutate(question = case_when(
-    str_detect(question, "enjoyment_") ~ "enjoyment",
-    str_detect(question, "aesthetics_") ~ "aesthetics",
-    str_detect(question, "vibrancy_") ~ "vibrancy",
-    str_detect(question, "safety_") ~ "safety"),
-    answer = fct_relevel(answer, c("Strongly disagree", "Disagree", "Neither Agree or Disagree", "Agree", "Strongly Agree"))) %>% 
-  count(gender, question, answer) %>% 
-  arrange(gender, question, answer) %>% 
-  filter(!is.na(answer))
-
-p <- ggplot(ratings_avg, aes(x = answer, y = n, fill = gender)) +
-  geom_bar(position="dodge", stat="identity") +
-  facet_grid(vars(question)) +
-  scale_fill_brewer(palette = "Pastel1") +
-  labs(title = "Average ratings by question and gender",
-       x = NULL, y = NULL) +
-  theme_minimal() +
-  theme(
-    axis.line.x = element_blank(),
-    strip.text = element_text(size = 14, margin = margin(0, 0, 0.2, 0, "cm")),
-    legend.position = "bottom",
-    legend.justification = "right",
-    legend.margin = margin(4.5, 0, 1.5, 0, "pt"),
-    legend.spacing.x = grid::unit(4.5, "pt"),
-    legend.spacing.y = grid::unit(0, "pt"),
-    legend.box.spacing = grid::unit(0, "cm")
-  ) 
-  
-ggplotly(p) %>% 
-  layout(legend = list(orientation = "h",   # show entries horizontally
-                     xanchor = "center",  # use center of legend as anchor
-                     x = 0.5)) 
-
-# ggplot(ratings_avg, aes(x = answer, y = n)) +
-#   # geom_density_line(
-#   #   data = select(ratings_avg, -gender), aes(fill = "all respondents"),
-#   #   color = "transparent"
-#   # )  +
-#   geom_col() +
-#   facet_grid(vars(question), vars(gender)) +
-#   scale_fill_brewer(palette = "Set1") +
-#   theme_minimal() +
-#   theme(
-#     axis.line.x = element_blank(),
-#     strip.text = element_text(size = 14, margin = margin(0, 0, 0.2, 0, "cm")),
-#     legend.position = "bottom",
-#     legend.justification = "right",
-#     legend.margin = margin(4.5, 0, 1.5, 0, "pt"),
-#     legend.spacing.x = grid::unit(4.5, "pt"),
-#     legend.spacing.y = grid::unit(0, "pt"),
-#     legend.box.spacing = grid::unit(0, "cm")
-#   )
-
-
-```
-
 ### Combined ratings
 
 ```{r}
@@ -370,32 +344,163 @@ ratings_df %>%
     )
 ```
 
-### Aesthetics
+<!-- ### Aesthetics -->
+
+<!-- ```{r} -->
+<!-- get_ratings_table(ratings_df, "aesthetics") -->
+
+<!-- ``` -->
+
+
+
+
+### Average ratings by genre
 
 ```{r}
-get_ratings_table(ratings_df, "aesthetics")
+ratings_avg <- df %>% 
+  select(gender, starts_with(c("enjoyment_", "aesthetics_", "safety_", "vibrancy_"))) %>% 
+  pivot_longer(!gender, names_to = "question", values_to = "answer") %>% 
+  mutate(question = case_when(
+    str_detect(question, "enjoyment_") ~ "enjoyment",
+    str_detect(question, "aesthetics_") ~ "aesthetics",
+    str_detect(question, "vibrancy_") ~ "vibrancy",
+    str_detect(question, "safety_") ~ "safety"),
+    answer = fct_relevel(answer, c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"))) %>% 
+  count(gender, question, answer) %>% 
+  arrange(gender, question, answer) %>% 
+  filter(!is.na(answer))
+
+p <- ggplot(ratings_avg, aes(x = answer, y = n, fill = gender)) +
+  geom_bar(position="dodge", stat="identity") +
+  facet_grid(vars(question)) +
+  scale_fill_brewer(palette = "Pastel1") +
+  labs(title = "Average ratings by question and gender",
+       x = NULL, y = NULL) +
+  theme_minimal() +
+  theme(
+    axis.line.x = element_blank(),
+    strip.text = element_text(size = 14, margin = margin(0, 0, 0.2, 0, "cm")),
+    legend.position = "bottom",
+    legend.justification = "right",
+    legend.margin = margin(4.5, 0, 1.5, 0, "pt"),
+    legend.spacing.x = grid::unit(4.5, "pt"),
+    legend.spacing.y = grid::unit(0, "pt"),
+    legend.box.spacing = grid::unit(0, "cm")
+  ) 
+  
+ggplotly(p) %>% 
+  layout(legend = list(orientation = "h",   # show entries horizontally
+                     xanchor = "center",  # use center of legend as anchor
+                     x = 0.5)) 
+
+# ggplot(ratings_avg, aes(x = answer, y = n)) +
+#   # geom_density_line(
+#   #   data = select(ratings_avg, -gender), aes(fill = "all respondents"),
+#   #   color = "transparent"
+#   # )  +
+#   geom_col() +
+#   facet_grid(vars(question), vars(gender)) +
+#   scale_fill_brewer(palette = "Set1") +
+#   theme_minimal() +
+#   theme(
+#     axis.line.x = element_blank(),
+#     strip.text = element_text(size = 14, margin = margin(0, 0, 0.2, 0, "cm")),
+#     legend.position = "bottom",
+#     legend.justification = "right",
+#     legend.margin = margin(4.5, 0, 1.5, 0, "pt"),
+#     legend.spacing.x = grid::unit(4.5, "pt"),
+#     legend.spacing.y = grid::unit(0, "pt"),
+#     legend.box.spacing = grid::unit(0, "cm")
+#   )
+
 
 ```
 
-### Enjoyment
+
+### Average ratings by age
 
 ```{r}
-get_ratings_table(ratings_df, "enjoyment")
+ratings_avg <- df %>% 
+  select(age, starts_with(c("enjoyment_", "aesthetics_", "safety_", "vibrancy_"))) %>% 
+  pivot_longer(!age, names_to = "question", values_to = "answer") %>% 
+  mutate(question = case_when(
+    str_detect(question, "enjoyment_") ~ "enjoyment",
+    str_detect(question, "aesthetics_") ~ "aesthetics",
+    str_detect(question, "vibrancy_") ~ "vibrancy",
+    str_detect(question, "safety_") ~ "safety"),
+    answer = fct_relevel(answer, c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"))) %>% 
+  count(age, question, answer) %>% 
+  arrange(age, question, answer) %>% 
+  filter(!is.na(answer))
 
+p <- ggplot(ratings_avg, aes(x = answer, y = n, fill = age)) +
+  geom_bar(position="dodge", stat="identity") +
+  facet_grid(vars(question)) +
+  scale_fill_brewer(palette = "Pastel1") +
+  labs(title = "Average ratings by question and age",
+       x = NULL, y = NULL) +
+  theme_minimal() +
+  theme(
+    axis.line.x = element_blank(),
+    strip.text = element_text(size = 14, margin = margin(0, 0, 0.2, 0, "cm")),
+    legend.position = "bottom",
+    legend.justification = "right",
+    legend.margin = margin(4.5, 0, 1.5, 0, "pt"),
+    legend.spacing.x = grid::unit(4.5, "pt"),
+    legend.spacing.y = grid::unit(0, "pt"),
+    legend.box.spacing = grid::unit(0, "cm")
+  ) 
+  
+ggplotly(p) %>% 
+  layout(legend = list(orientation = "h",   # show entries horizontally
+                     xanchor = "center",  # use center of legend as anchor
+                     x = 0.5)) 
 ```
-### Safety
+
+
+
+### Average ratings by ethnicity
 
 ```{r}
-get_ratings_table(ratings_df, "safety")
+ratings_avg <- df %>% 
+  select(ethnicity, starts_with(c("enjoyment_", "aesthetics_", "safety_", "vibrancy_"))) %>% 
+  pivot_longer(!ethnicity, names_to = "question", values_to = "answer") %>% 
+  mutate(question = case_when(
+    str_detect(question, "enjoyment_") ~ "enjoyment",
+    str_detect(question, "aesthetics_") ~ "aesthetics",
+    str_detect(question, "vibrancy_") ~ "vibrancy",
+    str_detect(question, "safety_") ~ "safety"),
+    answer = fct_relevel(answer, c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"))) %>% 
+  count(ethnicity, question, answer) %>% 
+  arrange(ethnicity, question, answer) %>% 
+  filter(!is.na(answer))
 
+p <- ggplot(ratings_avg, aes(x = answer, y = n, fill = ethnicity)) +
+  geom_bar(position="dodge", stat="identity") +
+  facet_grid(vars(question)) +
+  scale_fill_brewer(palette = "Pastel1") +
+  labs(title = "Average ratings by question and ethnicity",
+       x = NULL, y = NULL) +
+  theme_minimal() +
+  theme(
+    axis.line.x = element_blank(),
+    strip.text = element_text(size = 14, margin = margin(0, 0, 0.2, 0, "cm")),
+    legend.position = "bottom",
+    legend.justification = "right",
+    legend.margin = margin(4.5, 0, 1.5, 0, "pt"),
+    legend.spacing.x = grid::unit(4.5, "pt"),
+    legend.spacing.y = grid::unit(0, "pt"),
+    legend.box.spacing = grid::unit(0, "cm")
+  ) 
+  
+ggplotly(p) %>% 
+  layout(legend = list(orientation = "h",   # show entries horizontally
+                     xanchor = "center",  # use center of legend as anchor
+                     x = 0.5)) 
 ```
 
-### Vibrancy
 
-```{r}
-get_ratings_table(ratings_df, "vibrancy")
 
-```
 
 ### Number of assessments per image
 
@@ -411,10 +516,32 @@ ratings_df %>%
 ```
 # Perceptions
 
-
 ## Column
 
-### Participants {.value-box .no-mobile}
+### Items
+
+```{r}
+p <- df %>% 
+  select(starts_with("influencing_objects_")) %>% 
+  pivot_longer(starts_with("influencing_objects_"), 
+               names_to = "Object", values_to = "Influence") %>% 
+  mutate(Object = str_replace(Object, "influencing_objects_", ""),
+         Influence = fct_relevel(
+           as.factor(Influence),
+           levels = c("Less walkable", "Not important"))) %>% 
+  count(Object, Influence) %>% 
+  arrange(Object, Influence) %>% 
+  ggplot(aes(x = Influence, y = Object, fill = n)) +
+  geom_tile() + 
+  labs(title ="Objects' influence on walkability", 
+       x = "", y = "") +
+  # scale_fill_distiller(palette = "Purples") +
+  scale_fill_gradient(low= warwick_color_disabled, high= warwick_color) + 
+  theme_minimal()
+
+ggplotly(p)
+```
+
 
 # About {data-icon="ion-information-circled"}
 
