@@ -35,6 +35,15 @@
         "ideas",
         "userTesting"
       ]
+    },
+    {
+      "login": "tiaspetto",
+      "name": "Codex Xiang",
+      "avatar_url": "https://avatars.githubusercontent.com/u/11329784?v=4",
+      "profile": "https://github.com/Tiaspetto",
+      "contributions": [
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,
