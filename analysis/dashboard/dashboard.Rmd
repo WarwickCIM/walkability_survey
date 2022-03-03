@@ -33,7 +33,7 @@ for (i in files) {
   source(i)
 }
 
-df <- data_preparations("data/raw/survey_platial_demo.csv") %>% 
+df <- data_preparations("data/raw/survey_platial.csv") %>% 
 # df <- data_preparations("data/raw/survey_2021-12-10.csv") %>% 
   select(!starts_with("timing_"))
 
@@ -61,6 +61,298 @@ secondary_disabled <- "#DFDFDF"
 
 ```
 
+# Ratings {data-icon="fas fa-street-view"}
+
+## Column
+
+### Images {.value-box .no-mobile}
+
+```{r}
+valueBox(value = format(nlevels(as.factor(ratings_df$image_num)), big.mark = ","), 
+         caption = "different images have been assessed, of a total of 5,375", 
+         icon = "fas fa-images", 
+         color = "#F8F8F8")
+```
+
+### Max {.value-box .no-mobile}
+
+```{r}
+valueBox(value = n_rated_max, 
+         caption = "is the maximum number of ratings received by a single image", 
+         icon = "fas fa-star", 
+         color = "#F8F8F8")
+```
+
+### Min {.value-box .no-mobile}
+
+```{r}
+valueBox(value = n_rated_min, 
+         caption = "is the minimum number of ratings received by a single image", 
+         icon = "far fa-star", 
+         color = "#F8F8F8")
+```
+
+### Min {.value-box .no-mobile}
+
+```{r}
+valueBox(value = n_rated_mean, 
+         caption = "is the average number of ratings received by every single image", 
+         icon = "fas fa-star-half", 
+         color = "#F8F8F8")
+```
+
+## Column {.tabset}
+
+### Combined ratings
+
+```{r}
+ratings_df %>% 
+  count(image_num, item, rating) %>% 
+  mutate(img = paste0("<a href='https://raw.githubusercontent.com/WarwickCIM/walkability_survey/gsv_images/img/",image_num, "_composite.jpg'>",
+      "<img src='https://raw.githubusercontent.com/WarwickCIM/walkability_survey/gsv_images/img/s/", image_num, "_composite.jpg' width='100px'> </a>")) %>% 
+  relocate(img, .after = image_num) %>% 
+  arrange(item, rating) %>% 
+  filter(!is.na(rating)) %>% 
+  pivot_wider(names_from =c(item, rating), values_from = n) %>% 
+  arrange(image_num) %>% 
+  reactable(
+    searchable = TRUE, 
+    striped = TRUE,
+    highlight = TRUE,
+    bordered = TRUE,
+    # pagination = FALSE, 
+    # defaultSorted = list("Strongly Agree" = "desc"),
+    defaultColDef = colDef(
+      sortNALast = TRUE,
+      align = "center"
+      ), 
+    columns = list(
+      image_num = colDef(name = "#", width=30, align = "right"),
+      img = colDef(html = TRUE),
+      `aesthetics_Strongly Disagree` = colDef(name = "Strongly Disagree"),
+      `aesthetics_Disagree` = colDef(name = "Disagree"),
+      `aesthetics_Neutral` = 
+        colDef(name = "Neutral"),
+      `aesthetics_Agree` =  colDef(name = "Agree"),
+      `aesthetics_Strongly Agree` =  colDef(name = "Strongly Agree"),
+      `enjoyment_Strongly Disagree` = colDef(name = "Strongly Disagree"),
+      `enjoyment_Disagree` = colDef(name = "Disagree"),
+      `enjoyment_Neutral` = 
+        colDef(name = "Neutral"),
+      `enjoyment_Agree` =  colDef(name = "Agree"),
+      `enjoyment_Strongly Agree` =  colDef(name = "Strongly Agree"),
+      `safety_Strongly Disagree` = colDef(name = "Strongly Disagree"),
+      `safety_Disagree` = colDef(name = "Disagree"),
+      `safety_Neutral` = 
+        colDef(name = "Neutral"),
+      `safety_Agree` =  colDef(name = "Agree"),
+      `safety_Strongly Agree` =  colDef(name = "Strongly Agree"),
+      `vibrancy_Strongly Disagree` = colDef(name = "Strongly Disagree"),
+      `vibrancy_Disagree` = colDef(name = "Disagree"),
+      `vibrancy_Neutral` = 
+        colDef(name = "Neutral"),
+      `vibrancy_Agree` =  colDef(name = "Agree"),
+      `vibrancy_Strongly Agree` =  colDef(name = "Strongly Agree")
+      ),
+    columnGroups = list(
+      colGroup(name = "Aesthetics", 
+               columns = c("aesthetics_Strongly Disagree", 
+                           "aesthetics_Disagree",
+                           "aesthetics_Neutral",
+                           "aesthetics_Agree",
+                           "aesthetics_Strongly Agree")),
+      colGroup(name = "Enjoyment", 
+               columns = c("enjoyment_Strongly Disagree", 
+                           "enjoyment_Disagree",
+                           "enjoyment_Neutral",
+                           "enjoyment_Agree",
+                           "enjoyment_Strongly Agree")),
+      colGroup(name = "Safety", 
+               columns = c("safety_Strongly Disagree", 
+                           "safety_Disagree",
+                           "safety_Neutral",
+                           "safety_Agree",
+                           "safety_Strongly Agree")),
+      colGroup(name = "Vibrancy", 
+               columns = c("vibrancy_Strongly Disagree", 
+                           "vibrancy_Disagree",
+                           "vibrancy_Neutral",
+                           "vibrancy_Agree",
+                           "vibrancy_Strongly Agree"))
+      )
+    )
+```
+
+<!-- ### Aesthetics -->
+
+<!-- ```{r} -->
+<!-- get_ratings_table(ratings_df, "aesthetics") -->
+
+<!-- ``` -->
+
+
+
+
+### Average ratings by genre
+
+```{r}
+ratings_avg <- df %>% 
+  select(gender, starts_with(c("enjoyment_", "aesthetics_", "safety_", "vibrancy_"))) %>% 
+  pivot_longer(!gender, names_to = "question", values_to = "answer") %>% 
+  mutate(question = case_when(
+    str_detect(question, "enjoyment_") ~ "enjoyment",
+    str_detect(question, "aesthetics_") ~ "aesthetics",
+    str_detect(question, "vibrancy_") ~ "vibrancy",
+    str_detect(question, "safety_") ~ "safety"),
+    answer = fct_relevel(answer, c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"))) %>% 
+  count(gender, question, answer) %>% 
+  arrange(gender, question, answer) %>% 
+  filter(!is.na(answer))
+
+p <- ggplot(ratings_avg, aes(x = answer, y = n, fill = gender)) +
+  geom_bar(position="dodge", stat="identity") +
+  facet_grid(vars(question)) +
+  scale_fill_brewer(palette = "Pastel1") +
+  labs(
+    # title = "Average ratings by question and gender",
+       x = NULL, y = NULL) +
+  theme_minimal() +
+  theme(
+    axis.line.x = element_blank(),
+    strip.text = element_text(size = 14, margin = margin(0, 0, 0.2, 0, "cm")),
+    legend.position = "bottom",
+    legend.justification = "right",
+    legend.margin = margin(4.5, 0, 1.5, 0, "pt"),
+    legend.spacing.x = grid::unit(4.5, "pt"),
+    legend.spacing.y = grid::unit(0, "pt"),
+    legend.box.spacing = grid::unit(0, "cm")
+  ) 
+  
+ggplotly(p) %>% 
+  layout(legend = list(orientation = "h",   # show entries horizontally
+                     xanchor = "center",  # use center of legend as anchor
+                     x = 0.5)) 
+
+# ggplot(ratings_avg, aes(x = answer, y = n)) +
+#   # geom_density_line(
+#   #   data = select(ratings_avg, -gender), aes(fill = "all respondents"),
+#   #   color = "transparent"
+#   # )  +
+#   geom_col() +
+#   facet_grid(vars(question), vars(gender)) +
+#   scale_fill_brewer(palette = "Set1") +
+#   theme_minimal() +
+#   theme(
+#     axis.line.x = element_blank(),
+#     strip.text = element_text(size = 14, margin = margin(0, 0, 0.2, 0, "cm")),
+#     legend.position = "bottom",
+#     legend.justification = "right",
+#     legend.margin = margin(4.5, 0, 1.5, 0, "pt"),
+#     legend.spacing.x = grid::unit(4.5, "pt"),
+#     legend.spacing.y = grid::unit(0, "pt"),
+#     legend.box.spacing = grid::unit(0, "cm")
+#   )
+
+
+```
+
+
+### Average ratings by age
+
+```{r}
+ratings_avg <- df %>% 
+  select(age, starts_with(c("enjoyment_", "aesthetics_", "safety_", "vibrancy_"))) %>% 
+  pivot_longer(!age, names_to = "question", values_to = "answer") %>% 
+  mutate(question = case_when(
+    str_detect(question, "enjoyment_") ~ "enjoyment",
+    str_detect(question, "aesthetics_") ~ "aesthetics",
+    str_detect(question, "vibrancy_") ~ "vibrancy",
+    str_detect(question, "safety_") ~ "safety"),
+    answer = fct_relevel(answer, c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"))) %>% 
+  count(age, question, answer) %>% 
+  arrange(age, question, answer) %>% 
+  filter(!is.na(answer))
+
+p <- ggplot(ratings_avg, aes(x = answer, y = n, fill = age)) +
+  geom_bar(position="dodge", stat="identity") +
+  facet_grid(vars(question)) +
+  scale_fill_brewer(palette = "Pastel1") +
+  labs(
+    # title = "Average ratings by question and age",
+       x = NULL, y = NULL) +
+  theme_minimal() +
+  theme(
+    axis.line.x = element_blank(),
+    strip.text = element_text(size = 14, margin = margin(0, 0, 0.2, 0, "cm")),
+    legend.position = "bottom",
+    legend.justification = "right",
+    legend.margin = margin(4.5, 0, 1.5, 0, "pt"),
+    legend.spacing.x = grid::unit(4.5, "pt"),
+    legend.spacing.y = grid::unit(0, "pt"),
+    legend.box.spacing = grid::unit(0, "cm")
+  ) 
+  
+ggplotly(p) %>% 
+  layout(legend = list(orientation = "h",   # show entries horizontally
+                     xanchor = "center",  # use center of legend as anchor
+                     x = 0.5)) 
+```
+
+
+
+### Average ratings by ethnicity
+
+```{r}
+ratings_avg <- df %>% 
+  select(ethnicity, starts_with(c("enjoyment_", "aesthetics_", "safety_", "vibrancy_"))) %>% 
+  pivot_longer(!ethnicity, names_to = "question", values_to = "answer") %>% 
+  mutate(question = case_when(
+    str_detect(question, "enjoyment_") ~ "enjoyment",
+    str_detect(question, "aesthetics_") ~ "aesthetics",
+    str_detect(question, "vibrancy_") ~ "vibrancy",
+    str_detect(question, "safety_") ~ "safety"),
+    answer = fct_relevel(answer, c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"))) %>% 
+  count(ethnicity, question, answer) %>% 
+  arrange(ethnicity, question, answer) %>% 
+  filter(!is.na(answer))
+
+p <- ggplot(ratings_avg, aes(x = answer, y = n, fill = ethnicity)) +
+  geom_bar(position="dodge", stat="identity") +
+  facet_grid(vars(question)) +
+  scale_fill_brewer(palette = "Pastel1") +
+  labs(
+    # title = "Average ratings by question and ethnicity",
+       x = NULL, y = NULL) +
+  theme_minimal() +
+  theme(
+    axis.line.x = element_blank(),
+    strip.text = element_text(size = 14, margin = margin(0, 0, 0.2, 0, "cm")),
+    legend.position = "bottom",
+    legend.justification = "right",
+    legend.margin = margin(4.5, 0, 1.5, 0, "pt"),
+    legend.spacing.x = grid::unit(4.5, "pt"),
+    legend.spacing.y = grid::unit(0, "pt"),
+    legend.box.spacing = grid::unit(0, "cm")
+  ) 
+  
+ggplotly(p) 
+```
+
+
+
+
+### Number of assessments per image
+
+```{r}
+ratings_df %>% 
+  count(image_num, name ="Number of assessments") %>% 
+  mutate(img = paste0("<a href='https://raw.githubusercontent.com/WarwickCIM/walkability_survey/gsv_images/img/",image_num, "_composite.jpg'>",
+      "<img src='https://raw.githubusercontent.com/WarwickCIM/walkability_survey/gsv_images/img/s/", image_num, "_composite.jpg' width='260px'> </a>")) %>% 
+  relocate(img, .after = image_num) %>% 
+  reactable( searchable = TRUE, pagination = FALSE, columns = list(
+    img = colDef(html = TRUE)
+  ))
+```
 
 # Demographics {data-icon="fas fa-users"}
 
@@ -243,300 +535,6 @@ ggplotly(p) %>%
 reactable(demographics_df)
 ```
 
-
-# Ratings {data-icon="fas fa-street-view"}
-
-## Column
-
-### Images {.value-box .no-mobile}
-
-```{r}
-valueBox(value = format(nlevels(as.factor(ratings_df$image_num)), big.mark = ","), 
-         caption = "different images have been assessed, of a total of 5,375", 
-         icon = "fas fa-images", 
-         color = "#F8F8F8")
-```
-
-### Max {.value-box .no-mobile}
-
-```{r}
-valueBox(value = n_rated_max, 
-         caption = "is the maximum number of ratings received by a single image", 
-         icon = "fas fa-star", 
-         color = "#F8F8F8")
-```
-
-### Min {.value-box .no-mobile}
-
-```{r}
-valueBox(value = n_rated_min, 
-         caption = "is the minimum number of ratings received by a single image", 
-         icon = "far fa-star", 
-         color = "#F8F8F8")
-```
-
-### Min {.value-box .no-mobile}
-
-```{r}
-valueBox(value = n_rated_mean, 
-         caption = "is the average number of ratings received by every single image", 
-         icon = "fas fa-star-half", 
-         color = "#F8F8F8")
-```
-
-## Column {.tabset}
-
-### Combined ratings
-
-```{r}
-ratings_df %>% 
-  count(image_num, item, rating) %>% 
-  mutate(img = paste0("<a href='https://raw.githubusercontent.com/WarwickCIM/walkability_survey/gsv_images/img/",image_num, "_composite.jpg'>",
-      "<img src='https://raw.githubusercontent.com/WarwickCIM/walkability_survey/gsv_images/img/s/", image_num, "_composite.jpg' width='100px'> </a>")) %>% 
-  relocate(img, .after = image_num) %>% 
-  arrange(item, rating) %>% 
-  filter(!is.na(rating)) %>% 
-  pivot_wider(names_from =c(item, rating), values_from = n) %>% 
-  arrange(image_num) %>% 
-  reactable(
-    searchable = TRUE, 
-    striped = TRUE,
-    highlight = TRUE,
-    bordered = TRUE,
-    # pagination = FALSE, 
-    # defaultSorted = list("Strongly Agree" = "desc"),
-    defaultColDef = colDef(
-      sortNALast = TRUE,
-      align = "center"
-      ), 
-    columns = list(
-      image_num = colDef(name = "#", width=30, align = "right"),
-      img = colDef(html = TRUE),
-      `aesthetics_Strongly Disagree` = colDef(name = "Strongly Disagree"),
-      `aesthetics_Disagree` = colDef(name = "Disagree"),
-      `aesthetics_Neutral` = 
-        colDef(name = "Neutral"),
-      `aesthetics_Agree` =  colDef(name = "Agree"),
-      `aesthetics_Strongly Agree` =  colDef(name = "Strongly Agree"),
-      `enjoyment_Strongly Disagree` = colDef(name = "Strongly Disagree"),
-      `enjoyment_Disagree` = colDef(name = "Disagree"),
-      `enjoyment_Neutral` = 
-        colDef(name = "Neutral"),
-      `enjoyment_Agree` =  colDef(name = "Agree"),
-      `enjoyment_Strongly Agree` =  colDef(name = "Strongly Agree"),
-      `safety_Strongly Disagree` = colDef(name = "Strongly Disagree"),
-      `safety_Disagree` = colDef(name = "Disagree"),
-      `safety_Neutral` = 
-        colDef(name = "Neutral"),
-      `safety_Agree` =  colDef(name = "Agree"),
-      `safety_Strongly Agree` =  colDef(name = "Strongly Agree"),
-      `vibrancy_Strongly Disagree` = colDef(name = "Strongly Disagree"),
-      `vibrancy_Disagree` = colDef(name = "Disagree"),
-      `vibrancy_Neutral` = 
-        colDef(name = "Neutral"),
-      `vibrancy_Agree` =  colDef(name = "Agree"),
-      `vibrancy_Strongly Agree` =  colDef(name = "Strongly Agree")
-      ),
-    columnGroups = list(
-      colGroup(name = "Aesthetics", 
-               columns = c("aesthetics_Strongly Disagree", 
-                           "aesthetics_Disagree",
-                           "aesthetics_Neutral",
-                           "aesthetics_Agree",
-                           "aesthetics_Strongly Agree")),
-      colGroup(name = "Enjoyment", 
-               columns = c("enjoyment_Strongly Disagree", 
-                           "enjoyment_Disagree",
-                           "enjoyment_Neutral",
-                           "enjoyment_Agree",
-                           "enjoyment_Strongly Agree")),
-      colGroup(name = "Safety", 
-               columns = c("safety_Strongly Disagree", 
-                           "safety_Disagree",
-                           "safety_Neutral",
-                           "safety_Agree",
-                           "safety_Strongly Agree")),
-      colGroup(name = "Vibrancy", 
-               columns = c("vibrancy_Strongly Disagree", 
-                           "vibrancy_Disagree",
-                           "vibrancy_Neutral",
-                           "vibrancy_Agree",
-                           "vibrancy_Strongly Agree"))
-      )
-    )
-```
-
-<!-- ### Aesthetics -->
-
-<!-- ```{r} -->
-<!-- get_ratings_table(ratings_df, "aesthetics") -->
-
-<!-- ``` -->
-
-
-
-
-### Average ratings by genre
-
-```{r}
-ratings_avg <- df %>% 
-  select(gender, starts_with(c("enjoyment_", "aesthetics_", "safety_", "vibrancy_"))) %>% 
-  pivot_longer(!gender, names_to = "question", values_to = "answer") %>% 
-  mutate(question = case_when(
-    str_detect(question, "enjoyment_") ~ "enjoyment",
-    str_detect(question, "aesthetics_") ~ "aesthetics",
-    str_detect(question, "vibrancy_") ~ "vibrancy",
-    str_detect(question, "safety_") ~ "safety"),
-    answer = fct_relevel(answer, c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"))) %>% 
-  count(gender, question, answer) %>% 
-  arrange(gender, question, answer) %>% 
-  filter(!is.na(answer))
-
-p <- ggplot(ratings_avg, aes(x = answer, y = n, fill = gender)) +
-  geom_bar(position="dodge", stat="identity") +
-  facet_grid(vars(question)) +
-  scale_fill_brewer(palette = "Pastel1") +
-  labs(title = "Average ratings by question and gender",
-       x = NULL, y = NULL) +
-  theme_minimal() +
-  theme(
-    axis.line.x = element_blank(),
-    strip.text = element_text(size = 14, margin = margin(0, 0, 0.2, 0, "cm")),
-    legend.position = "bottom",
-    legend.justification = "right",
-    legend.margin = margin(4.5, 0, 1.5, 0, "pt"),
-    legend.spacing.x = grid::unit(4.5, "pt"),
-    legend.spacing.y = grid::unit(0, "pt"),
-    legend.box.spacing = grid::unit(0, "cm")
-  ) 
-  
-ggplotly(p) %>% 
-  layout(legend = list(orientation = "h",   # show entries horizontally
-                     xanchor = "center",  # use center of legend as anchor
-                     x = 0.5)) 
-
-# ggplot(ratings_avg, aes(x = answer, y = n)) +
-#   # geom_density_line(
-#   #   data = select(ratings_avg, -gender), aes(fill = "all respondents"),
-#   #   color = "transparent"
-#   # )  +
-#   geom_col() +
-#   facet_grid(vars(question), vars(gender)) +
-#   scale_fill_brewer(palette = "Set1") +
-#   theme_minimal() +
-#   theme(
-#     axis.line.x = element_blank(),
-#     strip.text = element_text(size = 14, margin = margin(0, 0, 0.2, 0, "cm")),
-#     legend.position = "bottom",
-#     legend.justification = "right",
-#     legend.margin = margin(4.5, 0, 1.5, 0, "pt"),
-#     legend.spacing.x = grid::unit(4.5, "pt"),
-#     legend.spacing.y = grid::unit(0, "pt"),
-#     legend.box.spacing = grid::unit(0, "cm")
-#   )
-
-
-```
-
-
-### Average ratings by age
-
-```{r}
-ratings_avg <- df %>% 
-  select(age, starts_with(c("enjoyment_", "aesthetics_", "safety_", "vibrancy_"))) %>% 
-  pivot_longer(!age, names_to = "question", values_to = "answer") %>% 
-  mutate(question = case_when(
-    str_detect(question, "enjoyment_") ~ "enjoyment",
-    str_detect(question, "aesthetics_") ~ "aesthetics",
-    str_detect(question, "vibrancy_") ~ "vibrancy",
-    str_detect(question, "safety_") ~ "safety"),
-    answer = fct_relevel(answer, c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"))) %>% 
-  count(age, question, answer) %>% 
-  arrange(age, question, answer) %>% 
-  filter(!is.na(answer))
-
-p <- ggplot(ratings_avg, aes(x = answer, y = n, fill = age)) +
-  geom_bar(position="dodge", stat="identity") +
-  facet_grid(vars(question)) +
-  scale_fill_brewer(palette = "Pastel1") +
-  labs(title = "Average ratings by question and age",
-       x = NULL, y = NULL) +
-  theme_minimal() +
-  theme(
-    axis.line.x = element_blank(),
-    strip.text = element_text(size = 14, margin = margin(0, 0, 0.2, 0, "cm")),
-    legend.position = "bottom",
-    legend.justification = "right",
-    legend.margin = margin(4.5, 0, 1.5, 0, "pt"),
-    legend.spacing.x = grid::unit(4.5, "pt"),
-    legend.spacing.y = grid::unit(0, "pt"),
-    legend.box.spacing = grid::unit(0, "cm")
-  ) 
-  
-ggplotly(p) %>% 
-  layout(legend = list(orientation = "h",   # show entries horizontally
-                     xanchor = "center",  # use center of legend as anchor
-                     x = 0.5)) 
-```
-
-
-
-### Average ratings by ethnicity
-
-```{r}
-ratings_avg <- df %>% 
-  select(ethnicity, starts_with(c("enjoyment_", "aesthetics_", "safety_", "vibrancy_"))) %>% 
-  pivot_longer(!ethnicity, names_to = "question", values_to = "answer") %>% 
-  mutate(question = case_when(
-    str_detect(question, "enjoyment_") ~ "enjoyment",
-    str_detect(question, "aesthetics_") ~ "aesthetics",
-    str_detect(question, "vibrancy_") ~ "vibrancy",
-    str_detect(question, "safety_") ~ "safety"),
-    answer = fct_relevel(answer, c("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"))) %>% 
-  count(ethnicity, question, answer) %>% 
-  arrange(ethnicity, question, answer) %>% 
-  filter(!is.na(answer))
-
-p <- ggplot(ratings_avg, aes(x = answer, y = n, fill = ethnicity)) +
-  geom_bar(position="dodge", stat="identity") +
-  facet_grid(vars(question)) +
-  scale_fill_brewer(palette = "Pastel1") +
-  labs(title = "Average ratings by question and ethnicity",
-       x = NULL, y = NULL) +
-  theme_minimal() +
-  theme(
-    axis.line.x = element_blank(),
-    strip.text = element_text(size = 14, margin = margin(0, 0, 0.2, 0, "cm")),
-    legend.position = "bottom",
-    legend.justification = "right",
-    legend.margin = margin(4.5, 0, 1.5, 0, "pt"),
-    legend.spacing.x = grid::unit(4.5, "pt"),
-    legend.spacing.y = grid::unit(0, "pt"),
-    legend.box.spacing = grid::unit(0, "cm")
-  ) 
-  
-ggplotly(p) %>% 
-  layout(legend = list(orientation = "h",   # show entries horizontally
-                     xanchor = "center",  # use center of legend as anchor
-                     x = 0.5)) 
-```
-
-
-
-
-### Number of assessments per image
-
-```{r}
-ratings_df %>% 
-  count(image_num, name ="Number of assessments") %>% 
-  mutate(img = paste0("<a href='https://raw.githubusercontent.com/WarwickCIM/walkability_survey/gsv_images/img/",image_num, "_composite.jpg'>",
-      "<img src='https://raw.githubusercontent.com/WarwickCIM/walkability_survey/gsv_images/img/s/", image_num, "_composite.jpg' width='260px'> </a>")) %>% 
-  relocate(img, .after = image_num) %>% 
-  reactable( searchable = TRUE, pagination = FALSE, columns = list(
-    img = colDef(html = TRUE)
-  ))
-```
-
 # Objects {data-icon="fas fa-road"}
 
 ## Column
@@ -556,7 +554,8 @@ p <- df %>%
   arrange(Object, Influence) %>% 
   ggplot(aes(x = Influence, y = Object, fill = n)) +
   geom_tile() + 
-  labs(title ="Objects' influence on walkability", 
+  labs(
+    # title ="Objects' influence on walkability", 
        x = "", y = "", fill = "") +
   # scale_fill_distiller(palette = "Purples") +
   scale_fill_gradient(low= warwick_color_disabled, high= warwick_color) + 
