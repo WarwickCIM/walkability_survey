@@ -20,44 +20,52 @@
 #'   it with other sources.
 get_image_ratings <- function(df) {
 
-  ratings_df_wide <- data.frame(
-    response_id = character(),
-    image_num = integer(),
-    enjoyment_rating = character(),
-    aesthetics_rating = character(),
-    safety_rating = character(),
-    vibrancy_rating = character()
-  )
+  # ratings_df_wide <- data.frame(
+  #   response_id = character(),
+  #   image_num = integer(),
+  #   enjoyment_rating = character(),
+  #   aesthetics_rating = character(),
+  #   safety_rating = character(),
+  #   vibrancy_rating = character()
+  # )
 
   ratings_df <- data.frame(
     response_id = character(),
-    image_num = integer(),
+    # cluster = character(),
+    image_num = character(),
     item = character(),
     rating = character()
   )
 
-  for (i in 1:15) {
-    ratings_df_tmp <- df %>%
-      select(response_id, paste0("image_", i), starts_with(c(
-       paste0("enjoyment_img", i), paste0("aesthetics_img", i),
-        paste0("safety_img", i), paste0("vibrancy_img", i)))) %>%
-      rename(image_num = paste0("image_", i)) %>%
-      pivot_longer( starts_with(
-        c("enjoyment_", "aesthetics_", "safety_", "vibrancy_")),
-        names_to = "item", values_to = "rating") %>%
-      mutate(item = case_when(
-        str_detect(item, "enjoyment_") ~ "enjoyment",
-        str_detect(item, "aesthetics_") ~ "aesthetics",
-        str_detect(item, "vibrancy_") ~ "vibrancy",
-        str_detect(item, "safety_") ~ "safety")) %>%
-      mutate(across(everything(), as.character)) %>%
-      mutate(image_num = as.integer(image_num)) %>%
-      filter(!is.na(rating))
+  # There are four clusters. Each cluster has 3 sets of images that are
+  # displayed from 1:33, 34:66 and 67:99.
+  for (c in 0:4) {
+    for (i in 1:3) {
+      ratings_df_tmp <- df %>%
+        mutate(cluster = paste0("C", c)) %>%
+        select(response_id, cluster, paste0("img_c", c, "_", i), starts_with(c(
+          paste0("enjoyment_img_c", c, "_", i),
+          paste0("aesthetics_img_c", c, "_", i),
+          paste0("safety_img_c", c, "_", i),
+          paste0("vibrancy_img_c", c, "_", i)))) %>%
+        unite(image_num,
+          cluster, paste0("img_c", c, "_", i)) %>%
+        # rename(image_num = paste0("img_c", c, "_", i)) %>%
+        pivot_longer( starts_with(
+          c("enjoyment_", "aesthetics_", "safety_", "vibrancy_")),
+          names_to = "item", values_to = "rating") %>%
+        mutate(item = case_when(
+          str_detect(item, "enjoyment_") ~ "enjoyment",
+          str_detect(item, "aesthetics_") ~ "aesthetics",
+          str_detect(item, "vibrancy_") ~ "vibrancy",
+          str_detect(item, "safety_") ~ "safety")) %>%
+        mutate(across(everything(), as.character)) %>%
+        # mutate(image_num = as.integer(image_num)) %>%
+        filter(!is.na(rating))
 
-
-    ratings_df <- ratings_df %>%
-      bind_rows(ratings_df_tmp)
-
+      ratings_df <- ratings_df %>%
+        bind_rows(ratings_df_tmp)
+    }
   }
 
   ratings_df <- ratings_df %>%
@@ -66,7 +74,6 @@ get_image_ratings <- function(df) {
                 "Agree", "Strongly Agree")))
 
   return(ratings_df)
-
 }
 
 #' Generates a reactable with total ratings per image.
