@@ -33,10 +33,8 @@ for (i in files) {
   source(i)
 }
 
-df <- data_preparations("data/raw/survey_platial.csv") %>% 
-# df <- data_preparations("data/raw/survey_2021-12-10.csv") %>% 
-  select(!starts_with("timing_"))
-
+df <- read.csv(here::here("data/output/survey_clean.csv"))
+  
 ratings_df <- get_image_ratings(df) 
 
 ratings_total <- ratings_df %>% 
@@ -69,7 +67,7 @@ secondary_disabled <- "#DFDFDF"
 
 ```{r}
 valueBox(value = format(nlevels(as.factor(ratings_df$image_num)), big.mark = ","), 
-         caption = "different images have been assessed, of a total of 5,375", 
+         caption = "different images have been assessed, of a total of 495", 
          icon = "fas fa-images", 
          color = "#F8F8F8")
 ```
@@ -108,8 +106,8 @@ valueBox(value = n_rated_mean,
 ```{r}
 ratings_df %>% 
   count(image_num, item, rating) %>% 
-  mutate(img = paste0("<a href='https://raw.githubusercontent.com/WarwickCIM/walkability_survey/gsv_images/img/",image_num, "_composite.jpg'>",
-      "<img src='https://raw.githubusercontent.com/WarwickCIM/walkability_survey/gsv_images/img/s/", image_num, "_composite.jpg' width='100px'> </a>")) %>% 
+  mutate(img = paste0("<a href='https://raw.githubusercontent.com/WarwickCIM/walkability_gsv/gsv_img/img/",image_num, "_composite.jpg'>",
+      "<img src='https://raw.githubusercontent.com/WarwickCIM/walkability_gsv/gsv_img/img/s/", image_num, "_composite.jpg' width='100px'> </a>")) %>% 
   relocate(img, .after = image_num) %>% 
   arrange(item, rating) %>% 
   filter(!is.na(rating)) %>% 
@@ -127,7 +125,7 @@ ratings_df %>%
       align = "center"
       ), 
     columns = list(
-      image_num = colDef(name = "#", width=30, align = "right"),
+      image_num = colDef(name = "#", width=65, align = "right"),
       img = colDef(html = TRUE),
       `aesthetics_Strongly Disagree` = colDef(name = "Strongly Disagree"),
       `aesthetics_Disagree` = colDef(name = "Disagree"),
@@ -346,8 +344,8 @@ ggplotly(p)
 ```{r}
 ratings_df %>% 
   count(image_num, name ="Number of assessments") %>% 
-  mutate(img = paste0("<a href='https://raw.githubusercontent.com/WarwickCIM/walkability_survey/gsv_images/img/",image_num, "_composite.jpg'>",
-      "<img src='https://raw.githubusercontent.com/WarwickCIM/walkability_survey/gsv_images/img/s/", image_num, "_composite.jpg' width='260px'> </a>")) %>% 
+  mutate(img = paste0("<a href='https://raw.githubusercontent.com/WarwickCIM/walkability_gsv/gsv_img/img/",image_num, "_composite.jpg'>",
+      "<img src='https://raw.githubusercontent.com/WarwickCIM/walkability_gsv/gsv_img/img/s/", image_num, "_composite.jpg' width='260px'> </a>")) %>% 
   relocate(img, .after = image_num) %>% 
   reactable( searchable = TRUE, pagination = FALSE, columns = list(
     img = colDef(html = TRUE)
