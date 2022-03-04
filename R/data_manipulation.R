@@ -33,10 +33,10 @@ data_preparations <- function(file) {
            end_date = lubridate::ymd_hms(end_date),
            recorded_date = lubridate::ymd_hms(recorded_date)) %>%
     # Change factor order.
-    mutate(gender = str_replace(gender, "Prefer to self-describe", "Other"),
-           gender = fct_relevel(as.factor(gender),
-                                levels = c("Female", "Male", "Non-binary",
-                                           "Other")))
+    mutate(gender = str_replace(gender, "Prefer to self-describe", "Other")) %>%
+    # Renames wrong column names caused by duplicated names in qualtrics.
+    rename(enjoyment_img_c4_1 = enjoyment_img_c4_1_111,
+           enjoyment_img_c4_2 = enjoyment_img_c4_1_116)
 
   # Rename long variables.
   # TODO: make this work!
