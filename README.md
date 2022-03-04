@@ -7,8 +7,7 @@ Project contains  all the code and data aimed to analyse a survey on perceived w
 
 ## Who are we? 
 
-Dr Tessio Novack, Dr James Tripp and Dr Carlos Camara Menoyo. We are researchers from the 
-[University of Warwick](https://warwick.ac.uk). 
+Dr Tessio Novack, Dr James Tripp and Dr Carlos Camara Menoyo. We are researchers from the [University of Warwick](https://warwick.ac.uk). 
  
 ## What are our interests? 
 
