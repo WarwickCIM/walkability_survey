@@ -1,0 +1,305 @@
+---
+title: "Questionnaire exploration"
+description: |
+  A new article created using the Distill format.
+author:
+  - name: Carlos Cámara-Menoyo
+    url: https://carloscamara.es/
+    affiliation: University of Warwick
+    affiliation_url: https://warwick.ac.uk
+    orcid_id: 0000-0002-9378-0549
+  - name: Tessio Novack
+    affiliation: University of Warwick
+    affiliation_url: https://warwick.ac.uk 
+    orcid_id: 0000-0003-2817-5972
+  - name: James Tripp
+    affiliation: University of Warwick
+    affiliation_url: https://warwick.ac.uk 
+    orcid_id: 0000-0003-2471-3411 
+date: "`r Sys.Date()`"
+output: 
+  distill::distill_article:
+    toc: true
+    toc_depth: 2
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(flexdashboard)
+library(dplyr)
+library(forcats)
+library(ggplot2)
+library(readr)
+library(reactable)
+library(stringr)
+library(tidyr)
+library(plotly)
+
+
+# Loads all the files where functions are defined
+files <- list.files(path = here::here("R"), pattern = "*.R", full.names = TRUE,
+                    recursive = FALSE)
+for (i in files) {
+  source(i)
+}
+
+image_path <- "https://raw.githubusercontent.com/WarwickCIM/walkability_gsv/gsv_img/img/"
+
+#  Data processing ---------------------------------------------------
+
+df <- read.csv(here::here("data/output/survey_clean.csv"))
+  
+ratings_df <- get_image_ratings(df) 
+
+ratings_total <- ratings_df %>% 
+  count(image_num)
+
+n_rated_max <- max(ratings_total$n)
+n_rated_min <- min(ratings_total$n)
+n_rated_mean <- round(mean(ratings_total$n),2)
+
+# Color definitions ------------------------------------------
+
+warwick_color <- "#5B3069"
+warwick_color_disabled <- "#E7E6F7"
+
+# Check this palette: https://bootswatch.com/pulse/
+
+primary_disabled <- "#9278BA"
+secondary_disabled <- "#DFDFDF"
+
+
+# thematic::thematic_rmd()
+
+```
+
+```{r ggplot_defaults}
+# Custom ggplot theme.
+mytheme_minimal <- theme_minimal(base_size = 12) +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
+        plot.caption = element_text(size = 8, face = "italic", 
+                                    colour = "grey60"),
+        plot.subtitle = element_text(size = 9, face = "plain", 
+                                     colour = "grey50"),
+        axis.ticks = element_line(colour = "grey80"),
+        axis.ticks.length = unit(2, "pt"),
+        strip.text = element_text(size = 12))
+mytheme <- theme_minimal(base_size = 12) +
+  theme(plot.caption = element_text(size = 8, face = "italic", 
+                                    colour = "grey60"),
+        plot.subtitle = element_text(size = 9, face = "plain", 
+                                     colour = "grey50"),
+        axis.ticks = element_line(colour = "grey80"),
+        axis.ticks.length = unit(2, "pt"),
+        strip.text = element_text(size = 12))
+theme_set(mytheme_minimal)
+```
+
+# Introduction
+
+Explain the questionnaire, type of questions, data collection.
+A questionnaire was published during `r min(df$start_date)`and `r max(df$start_date)`.
+We got `r nrow(df)` responses.
+Respondents were selected following these criteria: \* Living in the UK
+
+# Research questions
+
+-   Does gender influence in the perceived walkability?
+
+-   Does location influence the ratings?
+
+-   Do our clusters work?
+
+```{r ratings-overall, fig.cap="Overall distribution of ratings by walkability item"}
+ggplot(ratings_df, aes(x = rating_n, y = item)) +
+  geom_boxplot() +
+  labs(title = "Perceived walkability by item (overall)",
+       subtitle = "",
+       caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
+       x = "Ratings: Strongly Disagree (1) - Strongly Agree (5)",
+       y = NULL)
+```
+
+## Perceptions by social group
+
+```{r ratings-gender, fig.cap="Ratings by genre"}
+ggplot(ratings_df, aes(x = rating_n, y = gender, fill = gender)) +
+  geom_boxplot() +
+  facet_wrap(~item) + 
+  # theme_minimal() + 
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position="none") + 
+  labs(title = "Perceived walkability by gender",
+       subtitle = "Gender seems to have an impact in perception around safety and, to less extent, aesthetics.",
+       caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
+       x = "Ratings: Strongly Disagree (1) - Strongly Agree (5)",
+       y = NULL)
+```
+
+Figure \@ref(fig:ratings-gender) shows that gender does seem to have an influence in how safety is perceived: explain.
+
+To a lesser extent, there are some differences in how aesthetics are perceived for non-binary and those who do not fit in the previous categories), who seem to...
+
+```{r ratings-age, fig.cap="Ratings by age"}
+
+ggplot(ratings_df, aes(x = rating_n, y = age, fill = age)) +
+  geom_boxplot() +
+  facet_wrap(~item) + 
+  # theme_minimal() + 
+  scale_fill_brewer(palette="Blues") +
+  theme(legend.position="none") + 
+  labs(title = "Perceived walkability by age",
+       subtitle = "",
+       caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
+       x = "Ratings: Strongly Disagree (1) - Strongly Agree (5)",
+       y = NULL)
+```
+
+The older we get, the less aesthetically appealing we find streets.
+No significant differences in enjoyment.
+Safety: only young adults seem to feel safer (probably they feel safer and more confindent in every aspect of their lifes?), then those between 35-44.
+At 65, ratings are more skewed towards lower values.
+
+```{r ratings-ethnicity, fig.cap="Ratings by ethnicity"}
+
+ggplot(ratings_df, aes(x = rating_n, y = ethnicity, fill = ethnicity)) +
+  geom_boxplot() +
+  facet_wrap(~item) + 
+  # theme_minimal() + 
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position="none") + 
+  labs(title = "Perceived walkability by ethnicity",
+       subtitle = "",
+       caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
+       x = "Ratings: Strongly Disagree (1) - Strongly Agree (5)",
+       y = NULL)
+```
+
+I wouldn't have imagined that black people would be those who perceived streets safer!
+
+```{r ratings-sexual-orientation, fig.cap="Ratings by Sexual orientation"}
+
+ggplot(ratings_df, aes(x = rating_n, y = sexual_orientation_selected_choice, 
+                       fill = sexual_orientation_selected_choice)) +
+  geom_boxplot() +
+  facet_wrap(~item) + 
+  # theme_minimal() + 
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position="none") + 
+  labs(title = "Perceived walkability by sexual orientation",
+       subtitle = "",
+       caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
+       x = "Ratings: Strongly Disagree (1) - Strongly Agree (5)",
+       y = NULL)
+```
+
+I believe we should combine some categories: gay + queer for sure, and probably gay + queer + lesbian into homosexual?
+
+```{r immigrants, fig.cap="Ratings by immigration background"}
+
+ggplot(ratings_df, aes(x = rating_n, y = inmigration_background, 
+                       fill = inmigration_background)) +
+  geom_boxplot() +
+  facet_wrap(~item) + 
+  # theme_minimal() + 
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position="none") + 
+  labs(title = "Perceived walkability by immigration background",
+       subtitle = "",
+       caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
+       x = "Ratings: Strongly Disagree (1) - Strongly Agree (5)",
+       y = NULL)
+```
+
+TODO: rename "yes" -> Immigration background, no -> "?"
+
+I didn't expected to see that people with immigration backgrounds perceive streets to be safer.
+
+```{r disabilities, fig.cap="Ratings by disabilities affecting mobility"}
+
+ggplot(ratings_df, aes(x = rating_n, y = mobility_disabilities, 
+                       fill = mobility_disabilities)) +
+  geom_boxplot() +
+  facet_wrap(~item) + 
+  # theme_minimal() + 
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position="none") + 
+  labs(title = "Perceived walkability by disabilities affecting mobility",
+       subtitle = "Yes = Have a disability affecting their mobility",
+       caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
+       x = "Ratings: Strongly Disagree (1) - Strongly Agree (5)",
+       y = NULL)
+```
+
+```{r local-knowledge, fig.cap="Ratings by London's local knowledge"}
+
+ggplot(ratings_df, aes(x = rating_n, y = local_knowledge_london, 
+                       fill = local_knowledge_london)) +
+  geom_boxplot() +
+  facet_wrap(~item) + 
+  # theme_minimal() + 
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position="none") + 
+  labs(title = "Perceived walkability by local knowledge",
+       subtitle = "All images were from London locations",
+       caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
+       x = "Ratings: Strongly Disagree (1) - Strongly Agree (5)",
+       y = NULL)
+```
+
+## Perceptions by cluster
+
+Locations were grouped in five clusters, based exclusively in the features present in the four images of the same location, using a ML algorithm (see repo here).
+Location was not considered.
+
+```{r img-cluster, fig.cap="Ratings by Image cluster"}
+
+ggplot(ratings_df, aes(x = rating_n, y = cluster, 
+                       fill = cluster)) +
+  geom_boxplot() +
+  facet_wrap(~item) + 
+  # theme_minimal() + 
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position="none") + 
+  labs(title = "Perceived walkability by cluster",
+       subtitle = "All images were from London locations",
+       caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
+       x = "Ratings: Strongly Disagree (1) - Strongly Agree (5)",
+       y = NULL)
+```
+
+## Perceptions by geographic area
+
+Tessio, since you have the location of every location, we could create a map and see:
+
+-   if ratings respond to geographic locations (are there some areas which are less walkable than others?)
+
+-   if there's correlation between ratings and osm tagging (i.e. `highway = primary` is always more walkable than `highway = alley` obviously, this is a stupid example, but we could use highway=\*, smoothness=\*, width=\* , or even do some spatial calculations such as distance to certain amenities, trees, parks...)
+
+# Conclusions
+
+I'm afraid we have bad news:
+
+-   Usually, there are no differences between groups
+
+-   Usually, the mean for every item is 3 (neutral) -> not very useful -> we might have used numeric values?
+
+-   This is true in general for every item and every social group, with few exceptions:
+
+    -   Safety
+
+    -   aesthetics (to a much lesser extent) -> to be explored if it differs from people within the UK and outside
+
+-   Differences are usually spotted into groups with less participants.
+
+-   But, what is more to me: the results seem to be random: if we generated a random set of answers we might get a similar result. I'm starting to question if people (especially fast responders from prolific) have answered randomly to get paid -> repeat results and filter those which have taken less than 10 minutes?
+
+    -   Introduce some validation in qualtrics?
+        -> i.e. timing or if answers are too similar to the random ones.
+
+-   This might be a problem of visualisation used or the fact that the number of people -> could you think of better ones?
