@@ -33,6 +33,10 @@ for (i in files) {
   source(i)
 }
 
+image_path <- "https://raw.githubusercontent.com/WarwickCIM/walkability_gsv/gsv_img/img/"
+
+#  Data processing ---------------------------------------------------
+
 df <- read.csv(here::here("data/output/survey_clean.csv"))
   
 ratings_df <- get_image_ratings(df) 
@@ -106,8 +110,8 @@ valueBox(value = n_rated_mean,
 ```{r}
 ratings_df %>% 
   count(image_num, item, rating) %>% 
-  mutate(img = paste0("<a href='https://raw.githubusercontent.com/WarwickCIM/walkability_gsv/gsv_img/img/",image_num, "_composite.jpg'>",
-      "<img src='https://raw.githubusercontent.com/WarwickCIM/walkability_gsv/gsv_img/img/s/", image_num, "_composite.jpg' width='100px'> </a>")) %>% 
+  mutate(img = paste0("<a href='", image_path, image_num, "_composite.jpg'>",
+      "<img src='", image_path, image_num, "_composite.jpg' width='100px'> </a>")) %>% 
   relocate(img, .after = image_num) %>% 
   arrange(item, rating) %>% 
   filter(!is.na(rating)) %>% 
@@ -344,8 +348,8 @@ ggplotly(p)
 ```{r}
 ratings_df %>% 
   count(image_num, name ="Number of assessments") %>% 
-  mutate(img = paste0("<a href='https://raw.githubusercontent.com/WarwickCIM/walkability_gsv/gsv_img/img/",image_num, "_composite.jpg'>",
-      "<img src='https://raw.githubusercontent.com/WarwickCIM/walkability_gsv/gsv_img/img/s/", image_num, "_composite.jpg' width='260px'> </a>")) %>% 
+  mutate(img = paste0("<a href='", image_path, image_num, "_composite.jpg'>",
+      "<img src='", image_path, image_num, "_composite.jpg' width='260px'> </a>")) %>% 
   relocate(img, .after = image_num) %>% 
   reactable( searchable = TRUE, pagination = FALSE, columns = list(
     img = colDef(html = TRUE)
