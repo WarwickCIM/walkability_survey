@@ -71,9 +71,18 @@ get_image_ratings <- function(df) {
   ratings_df <- ratings_df %>%
     mutate(rating = fct_relevel(
       rating, c("Strongly Disagree", "Disagree", "Neutral",
-                "Agree", "Strongly Agree")))
+                "Agree", "Strongly Agree"))) %>%
+    # Create a numeric rating.
+    mutate(cluster = as.factor(str_sub(image_num, 1, 2)),
+           rating_n = as.numeric(rating))
 
-  return(ratings_df)
+  ratings_df_extended <- df %>%
+    select(response_id, gender, age, ethnicity,
+           sexual_orientation_selected_choice, inmigration_background,
+           mobility_disabilities, local_knowledge_london) %>%
+    left_join(ratings_df, by = "response_id")
+
+  return(ratings_df_extended)
 }
 
 #' Generates a reactable with total ratings per image.
