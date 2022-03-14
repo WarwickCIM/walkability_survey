@@ -1,14 +1,3 @@
-# You can learn more about package authoring with RStudio at:
-#
-#   http://r-pkgs.had.co.nz/
-#
-# Some useful keyboard shortcuts for package authoring:
-#
-#   Install Package:           'Ctrl + Shift + B'
-#   Check Package:             'Ctrl + Shift + E'
-#   Test Package:              'Ctrl + Shift + T'
-
-
 #' Prepares dataframe with survey responses.
 #' @description Reads a csv file containing qualtrics' export and cleans data.
 #' @param file String pointing to the csv file.
@@ -18,7 +7,7 @@ data_preparations <- function(file) {
                         col_type = list(.default = col_character())) %>%
     # Qualtrics adds comments to row one. They need to be removed.
     dplyr::filter(row_number() != 1) %>%
-    # Cleaning up messy names.
+    # Cleaning up messy names (whitespaces, capitalisation...).
     janitor::clean_names() %>%
     # Removes sensitive data.
     select(-ip_address, -recipient_last_name, -recipient_first_name,
@@ -34,9 +23,18 @@ data_preparations <- function(file) {
            recorded_date = lubridate::ymd_hms(recorded_date)) %>%
     # Change factor order.
     mutate(gender = str_replace(gender, "Prefer to self-describe", "Other")) %>%
-    # Renames wrong column names caused by duplicated names in qualtrics.
+    # Renames wrong column names caused by duplicated question names in
+    # qualtrics.
     rename(enjoyment_img_c4_1 = enjoyment_img_c4_1_111,
-           enjoyment_img_c4_2 = enjoyment_img_c4_1_116)
+           enjoyment_img_c4_2 = enjoyment_img_c4_1_116,
+           safety_img_c3_1 = safety_img_c3_1_171,
+           safety_img_c3_2 = safety_img_c3_1_176,
+           aesthetics_img_c1_2 = aesthetics_img_c1_2_221,
+           aesthetics_img_c1_3 = aesthetics_img_c1_2_226,
+           aesthetics_img_c2_1 = aesthetics_img_c2_1_231,
+           aesthetics_img_c2_2 = aesthetics_img_c2_1_236,
+           aesthetics_img_c4_1 = aesthetics_img_c4_1_261,
+           aesthetics_img_c4_2 = aesthetics_img_c4_1_266)
 
   # Rename long variables.
   # TODO: make this work!

@@ -27,5 +27,5 @@ df <- df_beta_1 %>%
   select(!starts_with("timing_"))
 
 
-write.csv(df, "data/output/survey_clean.csv")
+write.csv(df, "data/output/survey_clean.csv", row.names = FALSE)
 
