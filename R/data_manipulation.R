@@ -12,6 +12,8 @@ data_preparations <- function(file) {
     # Removes sensitive data.
     select(-ip_address, -recipient_last_name, -recipient_first_name,
            -recipient_email, -prolific_id, -external_data_reference) %>%
+    # Removes empty columns.
+    select(-language) %>%
     # Remove responses from people deciding to opt out.
     filter(consent_agreement != "No") %>%
     # Further naming improvements.
