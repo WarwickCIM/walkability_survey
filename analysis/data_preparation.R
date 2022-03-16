@@ -28,7 +28,16 @@ df <- df_beta_1 %>%
   mutate(gender = fct_relevel(as.factor(gender),
                               levels = c("Female", "Male", "Non-binary",
                                          "Other"))) %>%
-  select(!starts_with("timing_"))
+  select(!starts_with("timing_")) %>%
+  # Addressing the problem of exceeded bandwidth limits that resulted in images
+  # not being displayed.
+  # The first person reporting not being able to see images was from
+  # 28th Feb at 18:37.
+  # We checked random answers from 18:00 and they seem to follow a criteria that
+  # is not random. We'll be conservative and we will say that results after
+  # 18:00 are not valid.
+  filter(start_date < "2022-02-28 18:00:00") %>%
+  filter(group != "Public")
 
 
 write.csv(df, "data/output/survey_clean.csv", row.names = FALSE)
