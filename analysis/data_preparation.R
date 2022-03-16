@@ -17,10 +17,14 @@ df_1 <- data_preparations("data/raw/survey_GroupA_2022-02-28.csv") %>%
 df_2 <- data_preparations("data/raw/survey_GroupB_2022-02-28.csv") %>%
   mutate(group = "Final")
 
+df_public <- data_preparations("data/raw/survey_networks_2022-03-14.csv") %>%
+  mutate(group = "Public")
+
 df <- df_beta_1 %>%
   bind_rows(df_beta_2) %>%
   bind_rows(df_1) %>%
   bind_rows(df_2) %>%
+  bind_rows(df_public) %>%
   mutate(gender = fct_relevel(as.factor(gender),
                               levels = c("Female", "Male", "Non-binary",
                                          "Other"))) %>%
