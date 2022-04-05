@@ -1,5 +1,5 @@
 ---
-title: "Questionnaire exploration"
+title: "Questionnaire exploration WITHOUT NEUTRAL RATINGS"
 description: |
   A new article created using the Distill format.
 author:
@@ -39,7 +39,6 @@ library(stringr)
 library(tidyr)
 library(plotly)
 
-
 # Loads all the files where functions are defined
 files <- list.files(path = here::here("R"), pattern = "*.R", full.names = TRUE,
                     recursive = FALSE)
@@ -47,13 +46,19 @@ for (i in files) {
   source(i)
 }
 
-image_path <- "https://raw.githubusercontent.com/WarwickCIM/walkability_gsv/gsv_img/img/"
 
 #  Data processing ---------------------------------------------------
 
-df <- read.csv(here::here("data/output/survey_clean.csv"))
-  
-ratings_df <- get_image_ratings(df) 
+df <- read_csv(here::here("data/output/survey_clean.csv")) %>% 
+  filter(group != "Public") 
+
+ratings_df <- get_image_ratings(df)
+                                
+# Get rid of neutral ratings, to force meaningful results.            
+ratings_df <- get_image_ratings(df) %>%
+  filter(rating != "Neutral") %>%
+  mutate(rating = fct_drop(rating)) %>%
+  mutate(rating_n = as.numeric(rating))
 
 ratings_total <- ratings_df %>% 
   count(image_num)
@@ -103,9 +108,12 @@ theme_set(mytheme_minimal)
 # Introduction
 
 Explain the questionnaire, type of questions, data collection.
-A questionnaire was published during `r min(df$start_date)`and `r max(df$start_date)`.
-We got `r nrow(df)` responses.
-Respondents were selected following these criteria: \* Living in the UK
+
+We are analysing **`r nrow(df)` responses** from a questionnaire published between `r min(df$start_date)` and `r max(df$start_date)`.
+
+WE REMOVED NEUTRAL RATINGS!
+
+Respondents were selected following these groups: `r levels(as.factor(df$group))`
 
 # Research questions
 
@@ -289,6 +297,8 @@ I'm afraid we have bad news:
 
 -   Usually, the mean for every item is 3 (neutral) -> not very useful -> we might have used numeric values?
 
+    -   We might want to re-scale the answers to a scale from 1-4?
+
 -   This is true in general for every item and every social group, with few exceptions:
 
     -   Safety
@@ -303,3 +313,6 @@ I'm afraid we have bad news:
         -> i.e. timing or if answers are too similar to the random ones.
 
 -   This might be a problem of visualisation used or the fact that the number of people -> could you think of better ones?
+
+
+Plot average rating per image over time -> detect possible 
