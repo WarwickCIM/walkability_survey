@@ -1,5 +1,5 @@
 ---
-title: "Questionnaire exploration WITHOUT NEUTRAL RATINGS"
+title: "Questionnaire exploration"
 description: |
   A new article created using the Distill format.
 author:
@@ -37,7 +37,6 @@ library(readr)
 library(reactable)
 library(stringr)
 library(tidyr)
-library(plotly)
 
 # Loads all the files where functions are defined
 files <- list.files(path = here::here("R"), pattern = "*.R", full.names = TRUE,
@@ -55,10 +54,10 @@ df <- read_csv(here::here("data/output/survey_clean.csv")) %>%
 ratings_df <- get_image_ratings(df)
                                 
 # Get rid of neutral ratings, to force meaningful results.            
-ratings_df <- get_image_ratings(df) %>%
-  filter(rating != "Neutral") %>%
-  mutate(rating = fct_drop(rating)) %>%
-  mutate(rating_n = as.numeric(rating))
+# ratings_df <- get_image_ratings(df) %>%
+#   filter(rating != "Neutral") %>%
+#   mutate(rating = fct_drop(rating)) %>%
+#   mutate(rating_n = as.numeric(rating))
 
 ratings_total <- ratings_df %>% 
   count(image_num)
@@ -83,6 +82,7 @@ secondary_disabled <- "#DFDFDF"
 ```
 
 ```{r ggplot_defaults}
+
 # Custom ggplot theme.
 mytheme_minimal <- theme_minimal(base_size = 12) +
   theme(panel.grid.minor = element_blank(),
@@ -111,31 +111,91 @@ Explain the questionnaire, type of questions, data collection.
 
 We are analysing **`r nrow(df)` responses** from a questionnaire published between `r min(df$start_date)` and `r max(df$start_date)`.
 
-WE REMOVED NEUTRAL RATINGS!
-
 Respondents were selected following these groups: `r levels(as.factor(df$group))`
 
 # Research questions
 
--   Does gender influence in the perceived walkability?
+-   Does demographics influence in the perceived walkability?
+
+    -   Are some demographics more decisive than others?
 
 -   Does location influence the ratings?
 
--   Do our clusters work?
+-   Does our clusters' classification influence perceived walkability?
+
+    -   Do they work?
+
+# Results
+
+## Overall
+
+In this section we are showing results without aggregation.
+
+```{r histogram-overall, fig.cap="Histogram of ratings (no aggregation)"}
+ggplot(ratings_df, aes(rating_n)) +
+  geom_histogram(binwidth = 1) +
+  facet_wrap(~item, ncol = 4) +
+  labs(title = "Perceived walkability by item (overall)",
+       subtitle = "Ratings range from Strongly Disagree (1) to Strongly Agree (5)",
+       caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
+       x = "",
+       y = NULL) 
+
+
+```
 
 ```{r ratings-overall, fig.cap="Overall distribution of ratings by walkability item"}
 ggplot(ratings_df, aes(x = rating_n, y = item)) +
   geom_boxplot() +
   labs(title = "Perceived walkability by item (overall)",
-       subtitle = "",
+       subtitle = "Ratings range from Strongly Disagree (1) to Strongly Agree (5)",
        caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
-       x = "Ratings: Strongly Disagree (1) - Strongly Agree (5)",
-       y = NULL)
+       x = NULL,
+       y = NULL) 
 ```
 
-## Perceptions by social group
+Figure \@ref(fig:histogram-overall) shows that ...
 
-```{r ratings-gender, fig.cap="Ratings by genre"}
+Figure \@ref(fig:ratings-overall) shows that vibrancy, safety and enjoyment have the same mean (Neutral), whereas aesthetics' mean is lower (Disagree).
+Furthermore, vibrancy and enjoyment seem to have a similar distribution in ratings, suggesting that, either people do no differentiate between these two concepts or they were ill-defined.
+
+## Perceptions by demographics
+
+In this section we will be aggregating ratings by gender, age, ethnicity, sexual orientation, immigration background, disabilities affecting mobility, and local knowledge.
+By doing so, we expect to identify some demographics that are more relevant than others
+
+TODO: combine more than one demographic?
+
+### By Gender
+
+The table below shows age distribution
+
+```{r, fig.cap="Number of respondents per genre"}
+counts_df <- df %>% 
+  count(gender) %>% 
+  mutate(gender = as.factor(gender))
+
+knitr::kable(counts_df,
+             caption = "Number of respondents per genre")
+```
+
+```{r histogram-gender, fig.cap="Ratings by genre (histogram)", fig.height=7}
+ggplot(ratings_df, aes(rating_n, fill = gender)) +
+  geom_histogram(binwidth = 1) +
+  facet_grid(gender ~ item) +
+  labs(title = "Perceived walkability by gender",
+       subtitle = "Ratings range from Strongly Disagree (1) to Strongly Agree (5)",
+       caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
+       x = "",
+       y = NULL) +
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position="top") 
+
+
+```
+
+```{r ratings-gender, fig.cap="Ratings by genre (boxplot)"}
+
 ggplot(ratings_df, aes(x = rating_n, y = gender, fill = gender)) +
   geom_boxplot() +
   facet_wrap(~item) + 
@@ -143,15 +203,47 @@ ggplot(ratings_df, aes(x = rating_n, y = gender, fill = gender)) +
   scale_fill_brewer(palette="Set1") +
   theme(legend.position="none") + 
   labs(title = "Perceived walkability by gender",
-       subtitle = "Gender seems to have an impact in perception around safety and, to less extent, aesthetics.",
+       subtitle = "Ratings: Strongly Disagree (1) - Strongly Agree (5)",
        caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
-       x = "Ratings: Strongly Disagree (1) - Strongly Agree (5)",
-       y = NULL)
+       x = "",
+       y = NULL) +
+  geom_text(data = counts_df, aes(x = 3, label = paste0("N: ", n)),
+            size = 3)
+  
 ```
 
-Figure \@ref(fig:ratings-gender) shows that gender does seem to have an influence in how safety is perceived: explain.
+Figure \@ref(fig:ratings-gender) suggests that there are no big differences between male and female, as both groups follow a similar distribution.
+However, when comparing it to Figure \@ref(fig:ratings-gender), we can see that female's ratings towards safety are notably lower than any other gender.
 
 To a lesser extent, there are some differences in how aesthetics are perceived for non-binary and those who do not fit in the previous categories), who seem to...
+
+### By Age
+
+The table below shows age distribution
+
+```{r, fig.cap="Number of respondents per age"}
+counts_df <- df %>% 
+  count(age) %>% 
+  mutate(age = as.factor(age))
+
+knitr::kable(counts_df,
+             caption = "Number of respondents per age")
+```
+
+```{r histogram-age, fig.cap="Ratings by age (histogram)", fig.height=7}
+ggplot(ratings_df, aes(rating_n, fill = age)) +
+  geom_histogram(binwidth = 1) +
+  facet_grid(age ~ item) +
+  labs(title = "Perceived walkability by gender",
+       subtitle = "Ratings range from Strongly Disagree (1) to Strongly Agree (5)",
+       caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
+       x = "",
+       y = NULL) +
+  scale_fill_brewer(palette="Blues") +
+  theme(legend.position="top") 
+
+
+```
 
 ```{r ratings-age, fig.cap="Ratings by age"}
 
@@ -162,9 +254,9 @@ ggplot(ratings_df, aes(x = rating_n, y = age, fill = age)) +
   scale_fill_brewer(palette="Blues") +
   theme(legend.position="none") + 
   labs(title = "Perceived walkability by age",
-       subtitle = "",
+       subtitle = "Ratings: Strongly Disagree (1) - Strongly Agree (5)",
        caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
-       x = "Ratings: Strongly Disagree (1) - Strongly Agree (5)",
+       x = NULL,
        y = NULL)
 ```
 
@@ -172,6 +264,35 @@ The older we get, the less aesthetically appealing we find streets.
 No significant differences in enjoyment.
 Safety: only young adults seem to feel safer (probably they feel safer and more confindent in every aspect of their lifes?), then those between 35-44.
 At 65, ratings are more skewed towards lower values.
+
+### By ethnicity
+
+The table below shows ethnicity distribution
+
+
+```{r, fig.cap="Number of respondents per ethnicity"}
+counts_df <- df %>% 
+  count(ethnicity) 
+
+knitr::kable(counts_df,
+             caption = "Number of respondents per ethnicity")
+```
+
+```{r histogram-ethnicity, fig.cap="Ratings by ethnicity (histogram)", fig.height=7}
+ggplot(ratings_df, aes(rating_n, fill = ethnicity)) +
+  geom_histogram(binwidth = 1) +
+  facet_grid(ethnicity ~ item) +
+  labs(title = "Perceived walkability by ethnicity",
+       subtitle = "Ratings range from Strongly Disagree (1) to Strongly Agree (5)",
+       caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
+       x = "",
+       y = NULL) +
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position="top") 
+
+
+```
+
 
 ```{r ratings-ethnicity, fig.cap="Ratings by ethnicity"}
 
@@ -189,6 +310,33 @@ ggplot(ratings_df, aes(x = rating_n, y = ethnicity, fill = ethnicity)) +
 ```
 
 I wouldn't have imagined that black people would be those who perceived streets safer!
+
+### By sexual orientation
+
+```{r, fig.cap="Number of respondents per sexual orientation"}
+counts_df <- df %>% 
+  count(sexual_orientation_selected_choice) 
+
+knitr::kable(counts_df,
+             caption = "Number of respondents per sexual orientation")
+```
+
+```{r histogram-sexual-orientation, fig.cap="Ratings by sexual orientation (histogram)", fig.height=7}
+ggplot(ratings_df, aes(rating_n, fill = sexual_orientation_selected_choice)) +
+  geom_histogram(binwidth = 1) +
+  facet_grid(sexual_orientation_selected_choice ~ item) +
+  labs(title = "Perceived walkability by sexual orientation",
+       subtitle = "Ratings range from Strongly Disagree (1) to Strongly Agree (5)",
+       caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
+       x = "",
+       y = NULL) +
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position="top") 
+
+
+```
+
+
 
 ```{r ratings-sexual-orientation, fig.cap="Ratings by Sexual orientation"}
 
@@ -208,10 +356,36 @@ ggplot(ratings_df, aes(x = rating_n, y = sexual_orientation_selected_choice,
 
 I believe we should combine some categories: gay + queer for sure, and probably gay + queer + lesbian into homosexual?
 
+### By immigration status
+
+```{r, fig.cap="Number of respondents per immigration background"}
+counts_df <- df %>% 
+  count(immigration_background) 
+
+knitr::kable(counts_df,
+             caption = "Number of respondents per immigration background")
+```
+
+```{r histogram-immigration-background, fig.cap="Ratings by immigration background (histogram)", fig.height=7}
+ggplot(ratings_df, aes(rating_n, fill = immigration_background)) +
+  geom_histogram(binwidth = 1) +
+  facet_grid(immigration_background ~ item) +
+  labs(title = "Perceived walkability by immigration background",
+       subtitle = "Ratings range from Strongly Disagree (1) to Strongly Agree (5)",
+       caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
+       x = "",
+       y = NULL) +
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position="top") 
+
+
+```
+
+
 ```{r immigrants, fig.cap="Ratings by immigration background"}
 
-ggplot(ratings_df, aes(x = rating_n, y = inmigration_background, 
-                       fill = inmigration_background)) +
+ggplot(ratings_df, aes(x = rating_n, y = immigration_background, 
+                       fill = immigration_background)) +
   geom_boxplot() +
   facet_wrap(~item) + 
   # theme_minimal() + 
@@ -228,6 +402,33 @@ TODO: rename "yes" -> Immigration background, no -> "?"
 
 I didn't expected to see that people with immigration backgrounds perceive streets to be safer.
 
+### By disabilities
+
+
+```{r, fig.cap="Number of respondents per immigration background"}
+counts_df <- df %>% 
+  count(mobility_disabilities) 
+
+knitr::kable(counts_df,
+             caption = "Number of respondents per immigration background")
+```
+
+```{r histogram-disabilities, fig.cap="Ratings by immigration background (histogram)", fig.height=7}
+ggplot(ratings_df, aes(rating_n, fill = mobility_disabilities)) +
+  geom_histogram(binwidth = 1) +
+  facet_grid(mobility_disabilities ~ item) +
+  labs(title = "Perceived walkability by immigration background",
+       subtitle = "Ratings range from Strongly Disagree (1) to Strongly Agree (5)",
+       caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
+       x = "",
+       y = NULL) +
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position="top") 
+
+
+```
+
+
 ```{r disabilities, fig.cap="Ratings by disabilities affecting mobility"}
 
 ggplot(ratings_df, aes(x = rating_n, y = mobility_disabilities, 
@@ -243,6 +444,34 @@ ggplot(ratings_df, aes(x = rating_n, y = mobility_disabilities,
        x = "Ratings: Strongly Disagree (1) - Strongly Agree (5)",
        y = NULL)
 ```
+
+### By local knowledge
+
+TODO: sort answers by correct order (0-4) in the data preparations' file.
+
+```{r, fig.cap="Number of respondents per local knowledge"}
+counts_df <- df %>% 
+  count(local_knowledge_london) 
+
+knitr::kable(counts_df,
+             caption = "Number of respondents per immigration background")
+```
+
+```{r histogram-local-knowledge, fig.cap="Ratings by local knowledge (histogram)", fig.height=7}
+ggplot(ratings_df, aes(rating_n, fill = local_knowledge_london)) +
+  geom_histogram(binwidth = 1) +
+  facet_grid(local_knowledge_london ~ item) +
+  labs(title = "Perceived walkability by immigration background",
+       subtitle = "Ratings range from Strongly Disagree (1) to Strongly Agree (5)",
+       caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
+       x = "",
+       y = NULL) +
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position="top") 
+
+
+```
+
 
 ```{r local-knowledge, fig.cap="Ratings by London's local knowledge"}
 
@@ -262,8 +491,33 @@ ggplot(ratings_df, aes(x = rating_n, y = local_knowledge_london,
 
 ## Perceptions by cluster
 
-Locations were grouped in five clusters, based exclusively in the features present in the four images of the same location, using a ML algorithm (see repo here).
+Locations were grouped in five clusters, based exclusively in the features present in the four images of the same location, using a ML algorithm (see [repo here](https://github.com/WarwickCIM/walkability_ml)).
 Location was not considered.
+
+In this case N is the number of ratings received, and all of them received the same ratings, by design.r
+
+```{r, fig.cap="Number of respondents per cluster"}
+counts_df <- ratings_df %>% 
+  count(cluster) 
+
+knitr::kable(counts_df,
+             caption = "Number of respondents per cluster")
+```
+
+```{r histogram-ckuster, fig.cap="Ratings by cluster (histogram)", fig.height=7}
+ggplot(ratings_df, aes(rating_n, fill = cluster)) +
+  geom_histogram(binwidth = 1) +
+  facet_grid(cluster ~ item) +
+  labs(title = "Perceived walkability by cluster",
+       subtitle = "Ratings range from Strongly Disagree (1) to Strongly Agree (5)",
+       caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
+       x = "",
+       y = NULL) +
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position="top") 
+
+
+```
 
 ```{r img-cluster, fig.cap="Ratings by Image cluster"}
 
@@ -282,6 +536,15 @@ ggplot(ratings_df, aes(x = rating_n, y = cluster,
 ```
 
 ## Perceptions by geographic area
+
+```{r layout="l-screen-inset"}
+library(leaflet)
+leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addMarkers(lat=51.5076, lng=-0.1281, popup="Dummy marker")
+```
+
+(Reference <https://cengel.github.io/R-data-viz/domains.html#maps-e.g.-tmap>)
 
 Tessio, since you have the location of every location, we could create a map and see:
 
@@ -307,12 +570,11 @@ I'm afraid we have bad news:
 
 -   Differences are usually spotted into groups with less participants.
 
--   But, what is more to me: the results seem to be random: if we generated a random set of answers we might get a similar result. I'm starting to question if people (especially fast responders from prolific) have answered randomly to get paid -> repeat results and filter those which have taken less than 10 minutes?
+-   But, what is more to me: the results seem to be random: if we generated a random set of answers we might get a similar result.
+    I'm starting to question if people (especially fast responders from prolific) have answered randomly to get paid -> repeat results and filter those which have taken less than 10 minutes?
 
-    -   Introduce some validation in qualtrics?
-        -> i.e. timing or if answers are too similar to the random ones.
+    -   Introduce some validation in qualtrics? -> i.e. timing or if answers are too similar to the random ones.
 
 -   This might be a problem of visualisation used or the fact that the number of people -> could you think of better ones?
 
-
-Plot average rating per image over time -> detect possible 
+Plot average rating per image over time -> detect possible
