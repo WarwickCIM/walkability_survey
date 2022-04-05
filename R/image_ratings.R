@@ -78,7 +78,7 @@ get_image_ratings <- function(df) {
 
   ratings_df_extended <- df %>%
     select(response_id, gender, age, ethnicity,
-           sexual_orientation_selected_choice, inmigration_background,
+           sexual_orientation_selected_choice, immigration_background,
            mobility_disabilities, local_knowledge_london) %>%
     left_join(ratings_df, by = "response_id")
 

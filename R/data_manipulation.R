@@ -36,7 +36,9 @@ data_preparations <- function(file) {
            aesthetics_img_c2_1 = aesthetics_img_c2_1_231,
            aesthetics_img_c2_2 = aesthetics_img_c2_1_236,
            aesthetics_img_c4_1 = aesthetics_img_c4_1_261,
-           aesthetics_img_c4_2 = aesthetics_img_c4_1_266)
+           aesthetics_img_c4_2 = aesthetics_img_c4_1_266) %>%
+    # Renames wrong spelling.
+    rename(immigration_background = inmigration_background)
 
   # Rename long variables.
   # TODO: make this work!
