@@ -8,14 +8,14 @@ for (i in files) {
 }
 
 df_beta_1 <- data_preparations("data/raw/survey_beta_GroupA_2022-02-17.csv") %>%
-  mutate(group = "Beta")
+  mutate(group = "Prolific 1")
 df_beta_2 <- data_preparations("data/raw/survey_beta_GroupB_2022-02-17.csv") %>%
-  mutate(group = "Beta")
+  mutate(group = "Prolific 1")
 
 df_1 <- data_preparations("data/raw/survey_GroupA_2022-02-28.csv") %>%
-  mutate(group = "Final")
+  mutate(group = "Prolific 2")
 df_2 <- data_preparations("data/raw/survey_GroupB_2022-02-28.csv") %>%
-  mutate(group = "Final")
+  mutate(group = "Prolific 2")
 
 df_public <- data_preparations("data/raw/survey_networks_2022-03-14.csv") %>%
   mutate(group = "Public")
