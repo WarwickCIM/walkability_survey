@@ -29,7 +29,6 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 
-library(flexdashboard)
 library(dplyr)
 library(forcats)
 library(ggplot2)
@@ -190,6 +189,20 @@ ggplot(ratings_df, aes(rating_n, fill = gender)) +
        y = NULL) +
   scale_fill_brewer(palette="Set1") +
   theme(legend.position="top") 
+
+
+ggplot(ratings_df, aes(x = rating_n, y = stat(count) /sum(count), fill = gender)) +
+  geom_histogram(binwidth = 1) +
+  scale_y_continuous(labels = scales::percent) +
+  facet_grid(gender ~ item) +
+  labs(title = "Perceived walkability by gender (relative ratings)",
+       subtitle = "Ratings range from Strongly Disagree (1) to Strongly Agree (5)",
+       caption = "Source: Survey (Novack, Tripp, Cámara-Menoyo 2022)",
+       x = "",
+       y = NULL) +
+  scale_fill_brewer(palette="Set1") +
+  theme(legend.position="top") 
+
 
 
 ```
