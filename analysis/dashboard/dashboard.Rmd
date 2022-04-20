@@ -33,13 +33,13 @@ for (i in files) {
   source(i)
 }
 
-image_path <- "https://raw.githubusercontent.com/WarwickCIM/walkability_gsv/gsv_img/img/"
+image_path <- "https://agnor.lnx.warwick.ac.uk/walkability/images/"
 
 #  Data processing ---------------------------------------------------
 
 df <- read.csv(here::here("data/output/survey_clean.csv"))
   
-ratings_df <- get_image_ratings(df) 
+ratings_df <- read.csv(here::here("data/output/ratings.csv"))
 
 ratings_total <- ratings_df %>% 
   count(image_num)
@@ -449,9 +449,9 @@ fig_ethnicity <- ggplot(df, aes(x = ethnicity, y = ..count..)) +
   labs(title = "Ethnicity distribution", y = "", x = "") +
   theme_minimal()
 
-fig_inmigration <- ggplot(df, aes(x = inmigration_background, y = ..count..)) + 
+fig_inmigration <- ggplot(df, aes(x = immigration_background, y = ..count..)) + 
   geom_bar(fill = "#DECBE4") + 
-  labs(title = "Inmigration's status distribution", y = "", x = "") +
+  labs(title = "Immigration's status distribution", y = "", x = "") +
   theme_minimal()
 
 fig_gender <- ggplotly(fig_gender)
