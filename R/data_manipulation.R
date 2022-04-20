@@ -14,6 +14,8 @@ data_preparations <- function(file) {
            -recipient_email, -prolific_id, -external_data_reference) %>%
     # Removes empty columns.
     select(-language) %>%
+    # Removes constant variables.
+    select(-response_type, -finished) %>%
     # Remove responses from people deciding to opt out.
     filter(consent_agreement != "No") %>%
     # Further naming improvements.
@@ -25,20 +27,11 @@ data_preparations <- function(file) {
            recorded_date = lubridate::ymd_hms(recorded_date)) %>%
     # Change factor order.
     mutate(gender = str_replace(gender, "Prefer to self-describe", "Other")) %>%
-    # Renames wrong column names caused by duplicated question names in
-    # qualtrics.
-    rename(enjoyment_img_c4_1 = enjoyment_img_c4_1_111,
-           enjoyment_img_c4_2 = enjoyment_img_c4_1_116,
-           safety_img_c3_1 = safety_img_c3_1_171,
-           safety_img_c3_2 = safety_img_c3_1_176,
-           aesthetics_img_c1_2 = aesthetics_img_c1_2_221,
-           aesthetics_img_c1_3 = aesthetics_img_c1_2_226,
-           aesthetics_img_c2_1 = aesthetics_img_c2_1_231,
-           aesthetics_img_c2_2 = aesthetics_img_c2_1_236,
-           aesthetics_img_c4_1 = aesthetics_img_c4_1_261,
-           aesthetics_img_c4_2 = aesthetics_img_c4_1_266) %>%
     # Renames wrong spelling.
-    rename(immigration_background = inmigration_background)
+    rename(immigration_background = inmigration_background) %>%
+    # Removes uncompleted answers and deletes column.
+    filter(progress == "100") %>%
+    select(-progress)
 
   # Rename long variables.
   # TODO: make this work!
@@ -52,4 +45,3 @@ data_preparations <- function(file) {
   # }
 
 }
-
