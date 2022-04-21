@@ -11,17 +11,17 @@ for (i in files) {
 # Generate responses' dataset ---------------------------------------------
 
 df_beta_1 <- data_preparations("data/raw/survey_beta_GroupA_2022-02-17.csv") %>%
-  mutate(group = "Prolific 1")
+  mutate(batch = "Prolific 1")
 df_beta_2 <- data_preparations("data/raw/survey_beta_GroupB_2022-02-17.csv") %>%
-  mutate(group = "Prolific 1")
+  mutate(batch = "Prolific 1")
 
 df_1 <- data_preparations("data/raw/survey_GroupA_2022-04-14.csv") %>%
-  mutate(group = "Prolific 2")
+  mutate(batch = "Prolific 2")
 df_2 <- data_preparations("data/raw/survey_GroupB_2022-04-14.csv") %>%
-  mutate(group = "Prolific 2")
+  mutate(batch = "Prolific 2")
 
 df_public <- data_preparations("data/raw/survey_networks_2022-03-14.csv") %>%
-  mutate(group = "Public")
+  mutate(batch = "Public")
 
 df <- df_beta_1 %>%
   bind_rows(df_beta_2) %>%
@@ -40,7 +40,7 @@ df <- df_beta_1 %>%
   # is not random. We'll be conservative and we will say that results after
   # 18:00 are not valid.
   filter(start_date < "2022-02-28 18:00:00" | start_date > "2022-04-10 00:00:00") %>%
-  filter(group != "Public")
+  filter(batch != "Public")
 
 
 write.csv(df, "data/output/survey_clean.csv", row.names = FALSE)
@@ -49,4 +49,4 @@ write.csv(df, "data/output/survey_clean.csv", row.names = FALSE)
 # Generate images' ratings --------------------------------------
 
 ratings_df <- get_image_ratings(df)
-write.csv(ratings_df, file = "data/output/ratings.csv")
+write.csv(ratings_df, file = "data/output/ratings.csv", row.names = FALSE)

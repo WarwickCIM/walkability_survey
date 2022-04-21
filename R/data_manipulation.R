@@ -11,16 +11,26 @@ data_preparations <- function(file) {
     janitor::clean_names() %>%
     # Removes sensitive data.
     select(-ip_address, -recipient_last_name, -recipient_first_name,
-           -recipient_email, -prolific_id, -external_data_reference) %>%
+           -recipient_email, -prolific_id, -prolific_pid,
+           -external_data_reference, -study_id) %>%
     # Removes empty columns.
-    select(-language) %>%
+    select(-language, -q_city_export_tag, -q_dl, -q_distribution_type) %>%
     # Removes constant variables.
-    select(-response_type, -finished) %>%
+    select(-response_type, -finished, -q_chl) %>%
     # Remove responses from people deciding to opt out.
     filter(consent_agreement != "No") %>%
     # Further naming improvements.
     rename(gender = gender_selected_choice,
-           gender_description = gender_prefer_to_self_describe_text) %>%
+           gender_description = gender_prefer_to_self_describe_text,
+           sexual_orientation_other = sexual_orientation_none_of_the_above_please_specify_text,
+           modes_transport_cycling_e_scooter = modes_transport_cycling_or_electric_scooter,
+           personality_5_open_to_new_exp_complex = personality_5_open_to_new_experiences_complex,
+           influencing_objects_persons = influencing_objects_persons_pedestrians_and_riders,
+           influencing_objects_vehicles = influencing_objects_vehicles_car_truck_bus_etc,
+           influencing_objects_greenery = influencing_objects_greenery_trees_grass,
+           influencing_objects_barriers = influencing_objects_barriers_wall_fence_guard_rail,
+
+           ) %>%
     # Change types.
     mutate(start_date = lubridate::ymd_hms(start_date),
            end_date = lubridate::ymd_hms(end_date),
