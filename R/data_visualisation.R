@@ -1,22 +1,31 @@
 wkb_avg_rating_category <- function(df, my_category) {
-
   my_category <- enquo(my_category)
 
 
   df <- df %>%
-    select(!!my_category,
-           starts_with(
-             c("enjoyment_", "aesthetics_", "safety_", "vibrancy_"))) %>%
+    select(
+      !!my_category,
+      starts_with(
+        c("enjoyment_", "aesthetics_", "safety_", "vibrancy_")
+      )
+    ) %>%
     pivot_longer(!!my_category,
-                 names_to = "question", values_to = "answer") %>%
-    mutate(question = case_when(
-      str_detect(question, "enjoyment_") ~ "enjoyment",
-      str_detect(question, "aesthetics_") ~ "aesthetics",
-      str_detect(question, "vibrancy_") ~ "vibrancy",
-      str_detect(question, "safety_") ~ "safety"),
+      names_to = "question", values_to = "answer"
+    ) %>%
+    mutate(
+      question = case_when(
+        str_detect(question, "enjoyment_") ~ "enjoyment",
+        str_detect(question, "aesthetics_") ~ "aesthetics",
+        str_detect(question, "vibrancy_") ~ "vibrancy",
+        str_detect(question, "safety_") ~ "safety"
+      ),
       answer = fct_relevel(
-        answer, c("Strongly Disagree", "Disagree", "Neutral", "Agree",
-                  "Strongly Agree"))) %>%
+        answer, c(
+          "Strongly Disagree", "Disagree", "Neutral", "Agree",
+          "Strongly Agree"
+        )
+      )
+    ) %>%
     count(!!my_category, question, answer) %>%
     arrange(!!my_category, question, answer) %>%
     filter(!is.na(answer))
@@ -34,19 +43,17 @@ wkb_avg_rating_category <- function(df, my_category) {
 #' @param my_palette String containing a color brewer palette.
 ci_barplot_horizontal <- function(df, my_category, my_title, my_facet = NULL,
                                   my_palette = "Paired") {
-
   my_category <- enquo(my_category)
   my_facet <- enquo(my_facet)
 
   if (is.null(my_facet)) {
     df <- df %>%
-      filter(!! my_category != "") %>%
+      filter(!!my_category != "") %>%
       count()
   } else {
-
     df <- df %>%
-      filter(!! my_category != "") %>%
-      group_by(!! my_facet, !! my_category)
+      filter(!!my_category != "") %>%
+      group_by(!!my_facet, !!my_category)
   }
 
   df <- df %>%
@@ -55,11 +62,13 @@ ci_barplot_horizontal <- function(df, my_category, my_title, my_facet = NULL,
     arrange(gender, age)
 
   p <- ggplot(demographics_df, aes(x = age, y = n, fill = gender)) +
-    geom_bar(position="dodge", stat="identity") +
+    geom_bar(position = "dodge", stat = "identity") +
     facet_grid(vars(gender)) +
     scale_fill_brewer(palette = "Pastel1") +
-    labs(title = "Demographics' distribution",
-         x = NULL, y = NULL) +
+    labs(
+      title = "Demographics' distribution",
+      x = NULL, y = NULL
+    ) +
     theme_minimal() +
     theme(
       axis.line.x = element_blank(),
@@ -75,7 +84,7 @@ ci_barplot_horizontal <- function(df, my_category, my_title, my_facet = NULL,
 
   df <- df %>%
     summarise(total = n()) %>%
-    mutate(percent = percent(round(total/sum(total), digits = 2))) %>%
+    mutate(percent = percent(round(total / sum(total), digits = 2))) %>%
     arrange(desc(total)) %>%
     mutate(order = "1")
 
@@ -85,8 +94,9 @@ ci_barplot_horizontal <- function(df, my_category, my_title, my_facet = NULL,
     p <- ggplot(df, aes_q(x = quote(order), y = quote(total), fill = my_category)) +
       geom_bar(stat = "identity", position = "fill") +
       geom_text(aes(label = total),
-                colour = "white",
-                position = position_fill(vjust = 0.5)) +
+        colour = "white",
+        position = position_fill(vjust = 0.5)
+      ) +
       scale_y_continuous(labels = percent(c(0, 0.25, 0.5, 0.75, 1))) +
       facet_wrap(as.formula(paste("~", my_facet)), ncol = 1) +
       ggtitle(my_title) +
@@ -95,14 +105,15 @@ ci_barplot_horizontal <- function(df, my_category, my_title, my_facet = NULL,
       theme_minimal() +
       theme(axis.text.y = element_blank()) +
       theme(legend.position = "bottom") +
-      guides(fill=guide_legend(ncol=2)) +
+      guides(fill = guide_legend(ncol = 2)) +
       coord_flip()
   } else {
     p <- ggplot(df, aes_q(x = quote(order), y = quote(total), fill = my_category)) +
       geom_bar(stat = "identity", position = "fill") +
       geom_text(aes(label = total),
-                colour = "white",
-                position = position_fill(vjust = 0.5)) +
+        colour = "white",
+        position = position_fill(vjust = 0.5)
+      ) +
       scale_y_continuous(labels = percent(c(0, 0.25, 0.5, 0.75, 1))) +
       ggtitle(my_title) +
       labs(x = "", y = "", fill = "") +
@@ -110,12 +121,11 @@ ci_barplot_horizontal <- function(df, my_category, my_title, my_facet = NULL,
       theme_minimal() +
       theme(axis.text.y = element_blank()) +
       theme(legend.position = "bottom") +
-      guides(fill=guide_legend(ncol=2)) +
+      guides(fill = guide_legend(ncol = 2)) +
       coord_flip()
   }
 
   print(p)
-
 }
 
 
@@ -127,36 +137,37 @@ ci_barplot_horizontal <- function(df, my_category, my_title, my_facet = NULL,
 #' @param my_title String that will be used for Plot's title.
 ci_barplot_horizontal <- function(df, my_category, my_title, my_facet = NULL,
                                   my_palette = "Paired") {
-
   my_category <- enquo(my_category)
   my_facet <- enquo(my_facet)
 
   if (is.null(my_facet)) {
     df <- df %>%
-      filter(!! my_category != "") %>%
-      group_by(!! my_category)
+      filter(!!my_category != "") %>%
+      group_by(!!my_category)
   } else {
-
     df <- df %>%
-      filter(!! my_category != "") %>%
-      group_by(!! my_facet, !! my_category)
+      filter(!!my_category != "") %>%
+      group_by(!!my_facet, !!my_category)
   }
 
   df <- df %>%
     summarise(total = n()) %>%
-    mutate(percent = percent(round(total/sum(total), digits = 2))) %>%
+    mutate(percent = percent(round(total / sum(total), digits = 2))) %>%
     arrange(desc(total)) %>%
     mutate(order = "1")
 
   # View(df)
 
   if (!is.null(my_facet)) {
-    p <- ggplot(df, aes_q(x = quote(order), y = quote(total),
-                          fill = my_category)) +
+    p <- ggplot(df, aes_q(
+      x = quote(order), y = quote(total),
+      fill = my_category
+    )) +
       geom_bar(stat = "identity", position = "fill") +
       geom_text(aes(label = total),
-                colour = "white",
-                position = position_fill(vjust = 0.5)) +
+        colour = "white",
+        position = position_fill(vjust = 0.5)
+      ) +
       scale_y_continuous(labels = percent(c(0, 0.25, 0.5, 0.75, 1))) +
       facet_wrap(as.formula(paste("~", my_facet)), ncol = 1) +
       ggtitle(my_title) +
@@ -165,15 +176,18 @@ ci_barplot_horizontal <- function(df, my_category, my_title, my_facet = NULL,
       theme_minimal() +
       theme(axis.text.y = element_blank()) +
       theme(legend.position = "bottom") +
-      guides(fill=guide_legend(ncol=2)) +
+      guides(fill = guide_legend(ncol = 2)) +
       coord_flip()
   } else {
-    p <- ggplot(df, aes_q(x = quote(order),
-                          y = quote(total), fill = my_category)) +
+    p <- ggplot(df, aes_q(
+      x = quote(order),
+      y = quote(total), fill = my_category
+    )) +
       geom_bar(stat = "identity", position = "fill") +
       geom_text(aes(label = total),
-                colour = "white",
-                position = position_fill(vjust = 0.5)) +
+        colour = "white",
+        position = position_fill(vjust = 0.5)
+      ) +
       scale_y_continuous(labels = percent(c(0, 0.25, 0.5, 0.75, 1))) +
       ggtitle(my_title) +
       labs(x = "", y = "", fill = "") +
@@ -181,10 +195,9 @@ ci_barplot_horizontal <- function(df, my_category, my_title, my_facet = NULL,
       theme_minimal() +
       theme(axis.text.y = element_blank()) +
       theme(legend.position = "bottom") +
-      guides(fill=guide_legend(ncol=2)) +
+      guides(fill = guide_legend(ncol = 2)) +
       coord_flip()
   }
 
   print(p)
-
 }

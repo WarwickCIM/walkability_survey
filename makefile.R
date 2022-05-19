@@ -6,8 +6,8 @@
 # Loads all the files where functions are defined
 files <- list.files(path = here::here("R"), pattern = "*.R", full.names = TRUE,
                     recursive = FALSE)
-for (i in files) {
-  source(i)
+for (file in files) {
+  source(file)
 }
 
 # Prepare data.
